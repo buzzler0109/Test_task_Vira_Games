@@ -1,60 +1,81 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vira Games Scanner ⚡</title>
-    <!-- Tailwind CSS -->
+    <title>Vira Games Scanner Workspace</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        primary: '#3B82F6',
-                        secondary: '#60A5FA',
-                        cta: '#F97316',
-                        bgBase: '#0F172A',
-                        bgGlass: 'rgba(30, 41, 59, 0.7)',
-                    },
                     fontFamily: {
-                        sans: ['Fira Sans', 'sans-serif'],
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        display: ['Archivo', 'sans-serif'],
                         mono: ['Fira Code', 'monospace']
+                    },
+                    colors: {
+                        base: '#09090b',
+                        surface: '#18181b',
+                        bordercolor: '#27272a',
+                        primary: '#3b82f6',
+                        primaryHov: '#2563eb'
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
         body {
-            font-family: 'Fira Sans', sans-serif;
-            background-color: theme('colors.bgBase');
-            color: #E2E8F0;
-        }
-        h1, h2, h3, .code-text {
-            font-family: 'Fira Code', monospace;
+            background-color: theme('colors.base');
+            color: #fafafa;
         }
         
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .bento-card {
+            background-color: theme('colors.surface');
+            border: 1px solid theme('colors.bordercolor');
+            border-radius: 1.5rem;
+            transition: all 0.3s ease;
         }
         
-        .glow-text {
-            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        .bento-card:hover {
+            border-color: #3f3f46;
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
         }
-        
-        /* Loading Spinner */
+
+        /* Checkbox Styling */
+        input[type="checkbox"] {
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid theme('colors.bordercolor');
+            border-radius: 0.35rem;
+            background-color: theme('colors.base');
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        input[type="checkbox"]:checked {
+            background-color: theme('colors.primary');
+            border-color: theme('colors.primary');
+        }
+        input[type="checkbox"]:checked::after {
+            content: '✓';
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
         .spinner {
             border: 3px solid rgba(255,255,255,0.1);
             border-radius: 50%;
-            border-top: 3px solid #F97316;
+            border-top: 3px solid #fff;
             width: 20px;
             height: 20px;
             animation: spin 1s linear infinite;
@@ -62,235 +83,181 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden selection:bg-primary selection:text-white">
+<body class="antialiased min-h-screen py-12 px-4 sm:px-8">
 
-    <!-- Background Decoration -->
-    <div class="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-primary opacity-20 blur-[120px] rounded-full pointer-events-none z-[-1]"></div>
-    <div class="fixed bottom-[-20%] right-[-10%] w-[40%] h-[40%] bg-cta opacity-10 blur-[120px] rounded-full pointer-events-none z-[-1]"></div>
-
-    <!-- Navigation -->
-    <nav class="w-full fixed top-0 z-50 glass-card">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="text-xl font-bold font-mono tracking-tight glow-text flex items-center gap-2">
-                <i class="fa-solid fa-bolt text-cta"></i>
-                Vira Games <span class="text-secondary opacity-70 font-light">Scanner</span>
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <header class="flex justify-between items-end pb-6 border-b border-bordercolor">
+            <div>
+                <h1 class="font-display text-3xl font-bold tracking-tight">Scanner Workspace</h1>
+                <p class="text-zinc-400 font-sans mt-2">Vira Games Technical Automation</p>
             </div>
-            <div class="hidden md:flex gap-6 text-sm font-medium">
-                <a href="#scanner" class="hover:text-primary transition-colors">Scanner Form</a>
-                <a href="#docs" class="hover:text-primary transition-colors">Documentation</a>
-                <a href="#downloads" class="px-4 py-2 bg-primary/20 text-primary rounded-lg border border-primary/30 hover:bg-primary hover:text-white transition-all cursor-pointer">
-                    <i class="fa-solid fa-download mr-2"></i>Downloads
-                </a>
+            <div class="hidden sm:inline-flex items-center gap-2 text-xs font-mono bg-surface px-3 py-1.5 rounded-full border border-bordercolor text-zinc-300">
+                <div class="w-2 h-2 rounded-full bg-green-500"></div> n8n Ready
             </div>
-        </div>
-    </nav>
+        </header>
 
-    <!-- Hero & Form Section -->
-    <main class="flex-grow pt-32 pb-20 px-6" id="scanner">
-        <div class="max-w-3xl mx-auto text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-                Deep Clone & Analyze <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cta">Google Drive Workspaces</span>
-            </h1>
-            <p class="text-lg text-slate-400 max-w-2xl mx-auto font-light leading-relaxed">
-                Automated traversal, watermarking, and reporting via n8n. Paste your source folder URL below to trigger the recursive migration process.
-            </p>
-        </div>
-
-        <!-- Form Module -->
-        <div class="max-w-2xl mx-auto glass-card rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden group">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-cta"></div>
+        <!-- Bento Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            <form id="scanForm" class="flex flex-col gap-6">
-                <div class="flex flex-col gap-2">
-                    <label for="driveUrl" class="text-sm font-semibold tracking-wide text-slate-300 ml-1">Source Folder URL</label>
-                    <div class="relative">
-                        <i class="fa-brands fa-google-drive absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                        <input type="url" id="driveUrl" required
-                            class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-slate-600 font-mono text-sm"
-                            placeholder="https://drive.google.com/drive/folders/1t3nIyZ...">
-                    </div>
-                </div>
+            <!-- Left Column: Form & Action -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
                 
-                <div class="flex flex-col gap-2">
-                    <label for="destName" class="text-sm font-semibold tracking-wide text-slate-300 ml-1">Destination Base Name (Optional)</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-folder absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" id="destName" 
-                            class="w-full bg-slate-900/50 border border-slate-700 text-white rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-slate-600 font-mono text-sm"
-                            placeholder="default: ViraGames_Tech_Spec">
-                    </div>
-                </div>
+                <!-- Form Card -->
+                <div class="bento-card p-8 flex-grow flex flex-col justify-between relative overflow-hidden">
+                    <!-- Deco blur -->
+                    <div class="absolute -top-32 -right-32 w-64 h-64 bg-primary opacity-10 blur-3xl rounded-full"></div>
 
-                <button type="submit" id="submitBtn" class="mt-4 w-full bg-cta hover:bg-orange-600 text-white font-bold text-lg py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] flex justify-center items-center gap-3 cursor-pointer">
-                    <i class="fa-solid fa-radar font-xl"></i> Initialize Scanner
-                </button>
-                
-                <div id="formMessage" class="hidden text-center text-sm mt-2 rounded-lg py-3 px-4 flex items-center justify-center gap-2">
-                </div>
-            </form>
-        </div>
-    </main>
-
-    <!-- Downloads Section -->
-    <section id="downloads" class="py-20 border-t border-slate-800 bg-slate-900/30">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-3xl font-bold mb-10 text-center glow-text"><i class="fa-solid fa-code-branch mr-3"></i>Workflow Assets</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                
-                <!-- Main Workflow -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:border-primary/50 transition-colors">
                     <div>
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="p-3 bg-blue-500/10 text-blue-400 rounded-lg"><i class="fa-solid fa-diagram-project text-xl"></i></div>
-                            <h3 class="text-xl font-bold">Main Controller</h3>
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-primary/10 text-primary rounded-xl mb-6">
+                            <i class="fa-solid fa-radar text-xl"></i>
                         </div>
-                        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                            Orchestrates the process, provisions the local SQLite Database for mem-safe aggregation, formats dates, and sends the final Telegram report.
-                        </p>
+                        <h2 class="font-display text-2xl font-bold mb-2">Execute Scan</h2>
+                        <p class="text-zinc-400 text-sm mb-8">Initialize the dynamic workspace cloning workflow. Ensure the background n8n environment is active and waiting for payload.</p>
                     </div>
-                    <a href="Test_Task_Vira_Games_Copy_Directory.json" download class="w-full text-center py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl border border-slate-700 transition-colors cursor-pointer text-sm font-medium">
-                        <i class="fa-solid fa-download mr-2"></i>Download JSON (13.5 KB)
-                    </a>
+
+                    <form id="scanForm" class="space-y-5">
+                        
+                        <!-- Checkbox Confirmation -->
+                        <div class="flex items-start gap-3 bg-base p-4 rounded-xl border border-bordercolor mb-6 cursor-pointer" onclick="document.getElementById('n8nConfirm').click()">
+                            <input type="checkbox" id="n8nConfirm" class="mt-0.5">
+                            <label class="text-sm font-medium text-zinc-300 cursor-pointer pointer-events-none">
+                                I confirm that both <span class="text-white">Main Container</span> and <span class="text-white">Recursive</span> n8n workflows have been imported and activated in my workspace.
+                            </label>
+                        </div>
+
+                        <!-- Inputs -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-500">Source Folder URL</label>
+                            <input type="url" id="driveUrl" required
+                                class="w-full bg-base border border-bordercolor text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-primary transition-colors font-mono text-sm"
+                                placeholder="https://drive.google.com/drive/folders/...">
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-500">Destination Folder Name</label>
+                            <input type="text" id="destName" 
+                                class="w-full bg-base border border-bordercolor text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-primary transition-colors font-mono text-sm"
+                                placeholder="default: ViraGames_Tech_Spec">
+                        </div>
+
+                        <button type="submit" id="submitBtn" disabled
+                            class="w-full mt-4 bg-primary hover:bg-primaryHov text-white font-medium py-3.5 rounded-lg transition-all focus:ring-4 focus:ring-primary/20 flex justify-center items-center gap-2 opacity-50 cursor-not-allowed">
+                            <i class="fa-solid fa-paper-plane text-sm"></i> Transmit Payload
+                        </button>
+                    </form>
                 </div>
 
-                <!-- Sub Workflow -->
-                <div class="glass-card rounded-2xl p-6 flex flex-col justify-between hover:border-primary/50 transition-colors">
-                    <div>
-                        <div class="flex items-center gap-3 mb-4">
-                            <div class="p-3 bg-purple-500/10 text-purple-400 rounded-lg"><i class="fa-solid fa-microchip text-xl"></i></div>
-                            <h3 class="text-xl font-bold">Recursive Engine</h3>
-                        </div>
-                        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
-                            Handles depth-traversal, API polling, and dynamic image transformation (watermarking via mathematical expression evaluation).
-                        </p>
+                <!-- Result Terminal -->
+                <div class="bento-card p-6 min-h-[140px] flex flex-col">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-terminal"></i> Response Console
+                    </h3>
+                    
+                    <div id="resultConsole" class="flex-grow bg-base border border-bordercolor rounded-lg p-4 font-mono text-xs overflow-x-auto text-zinc-500 flex items-center justify-center">
+                        Awaiting execution...
                     </div>
-                    <a href="Test_Task_Vira_Games_Execute_Recursion.json" download class="w-full text-center py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl border border-slate-700 transition-colors cursor-pointer text-sm font-medium">
-                        <i class="fa-solid fa-download mr-2"></i>Download JSON (17.2 KB)
-                    </a>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Resources & Docs -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+                
+                <!-- Downloads -->
+                <div class="bento-card p-6">
+                    <h3 class="font-display font-semibold text-lg mb-4">Required Assets</h3>
+                    <div class="space-y-3">
+                        <a href="Test_Task_Vira_Games_Copy_Directory.json" download class="flex items-center justify-between p-3 bg-base border border-bordercolor rounded-lg hover:border-primary transition-colors group cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-file-code text-zinc-500 group-hover:text-primary transition-colors"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-zinc-200">Main_Workflow.json</p>
+                                    <p class="text-xs text-zinc-500">Controller config</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-download text-zinc-600 group-hover:text-primary"></i>
+                        </a>
+                        
+                        <a href="Test_Task_Vira_Games_Execute_Recursion.json" download class="flex items-center justify-between p-3 bg-base border border-bordercolor rounded-lg hover:border-primary transition-colors group cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-file-code text-zinc-500 group-hover:text-primary transition-colors"></i>
+                                <div>
+                                    <p class="text-sm font-medium text-zinc-200">Sub_Workflow.json</p>
+                                    <p class="text-xs text-zinc-500">Recursive Engine</p>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-download text-zinc-600 group-hover:text-primary"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Documentation -->
+                <div class="bento-card p-6 flex-grow overflow-auto max-h-[600px] custom-scrollbar">
+                    <h3 class="font-display font-semibold text-lg mb-4 pb-4 border-b border-bordercolor">Architecture Overview</h3>
+                    
+                    <div class="prose prose-sm prose-invert max-w-none text-zinc-400">
+                        <p class="mb-4">
+                            Автоматизований процес для рекурсивного копіювання вмісту папок Google Drive зі збереженням ієрархії, динамічною обробкою зображень (watermark) та генерацією фінального звіту.
+                        </p>
+                        
+                        <h4 class="text-zinc-200 font-semibold mb-2">1. Ініціалізація</h4>
+                        <p class="mb-4">Зчитування налаштувань. Створення <code>Data Table</code> в базі n8n для безпечного збору статистики без навантаження на API.</p>
+                        
+                        <h4 class="text-zinc-200 font-semibold mb-2">2. Рекурсія (Sub-Workflow)</h4>
+                        <ul class="list-disc pl-4 mb-4 space-y-1">
+                            <li>Вузол <code>Loop</code> для послідовної обробки (захист від OOM).</li>
+                            <li><strong>Папки:</strong> Викликає сам себе (рекурсія).</li>
+                            <li><strong>Зображення:</strong> <code>Edit Image</code> (динамічні формули) → запис у БД.</li>
+                        </ul>
+
+                        <h4 class="text-zinc-200 font-semibold mb-2">3. Звітність</h4>
+                        <p class="mb-4">Агрегація вивантажених з БД даних. Створення логу <code>.txt</code> у створеній директорії та відправка нотифікації в Telegram.</p>
+
+                        <div class="mt-6 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-200/80">
+                            <strong>Масштабування:</strong> Для продакшену рекомендується додати вузол <code>Wait (1 сек)</code> у Loop підпроцесу та <code>Retry On Fail</code> для G-Drive вузлів.
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Documentation Section -->
-    <section id="docs" class="py-20 px-6">
-        <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl font-bold mb-10 glow-text"><i class="fa-solid fa-book mr-3"></i>Technical Documentation</h2>
-            
-            <div class="glass-card rounded-2xl p-8 md:p-12 prose prose-invert prose-blue max-w-none">
-                <!-- HTML representation of Documentation_Buzaiev.md -->
-                <div class="text-lg text-slate-300 font-light italic border-l-4 border-primary pl-4 mb-8">
-                    Автоматизація рекурсивного копіювання Google Drive
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
-                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <span class="text-slate-500 block mb-1">Платформа</span>
-                        <strong class="text-white font-mono">n8n</strong>
-                    </div>
-                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800">
-                        <span class="text-slate-500 block mb-1">Архітектура</span>
-                        <strong class="text-white">Micro-workflows</strong>
-                    </div>
-                </div>
-
-                <h3 class="text-2xl font-bold mt-10 mb-4 text-white">Мета</h3>
-                <p class="text-slate-400 leading-relaxed mb-10">
-                    Створення автоматизованого процесу для рекурсивного копіювання вмісту папок Google Drive зі збереженням ієрархії, перейменуванням файлів, динамічною обробкою зображень (додавання водяного знака) та генерацією фінального звіту в Telegram та Google Диск.
-                </p>
-
-                <h3 class="text-xl font-bold mt-10 mb-6 text-white border-b border-slate-800 pb-2">1. Як запустити воркфлоу</h3>
-                <ul class="list-disc pl-5 space-y-3 text-slate-300">
-                    <li><strong class="text-white font-mono">Імпорт:</strong> Імпортуйте обидва JSON-файли (Main та Sub) у ваш інстанс n8n.</li>
-                    <li><strong class="text-white font-mono">Активація підпроцесу:</strong> Відкрийте Sub-Workflow, збережіть його та обов'язково переведіть тумблер у верхньому правому куті в стан <em>Active</em>. Скопіюйте його Workflow ID з URL-адреси.</li>
-                    <li><strong class="text-white font-mono">Зв'язування:</strong> Відкрийте Main Workflow, у вузлі <code>Execute Sub-workflow</code> вставте скопійований ID у поле Workflow ID.</li>
-                    <li><strong class="text-white font-mono">Налаштування конфігурації:</strong> У вузлі <code>Config</code> вкажіть стартові параметри.</li>
-                    <li><strong class="text-white font-mono">Запуск:</strong> Натисніть кнопку <code>Execute Workflow</code>.</li>
-                </ul>
-
-                <h3 class="text-xl font-bold mt-12 mb-6 text-white border-b border-slate-800 pb-2">2. Необхідні Credentials</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-                    <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/50">
-                        <h4 class="text-primary font-bold mb-3 flex items-center"><i class="fa-brands fa-google mr-2"></i> Google Drive OAuth2 API</h4>
-                        <ul class="text-sm text-slate-400 space-y-2">
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Читання, створення файлів/папок</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Пошук ієрархії</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Завантаження зображень</li>
-                        </ul>
-                    </div>
-                    <div class="bg-slate-800/40 p-5 rounded-xl border border-slate-700/50">
-                        <h4 class="text-blue-400 font-bold mb-3 flex items-center"><i class="fa-brands fa-telegram mr-2"></i> Telegram API</h4>
-                        <ul class="text-sm text-slate-400 space-y-2">
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Bot Token (BotFather)</li>
-                            <li><i class="fa-solid fa-check text-green-500 mr-2"></i>Відправка фінального звіту</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <h3 class="text-xl font-bold mt-12 mb-6 text-white border-b border-slate-800 pb-2">3. Логіка роботи</h3>
-                
-                <h4 class="text-lg text-secondary font-bold mb-3 mt-6">Main Workflow (Основний процес)</h4>
-                <ol class="list-decimal pl-5 space-y-3 text-slate-300 mb-8">
-                    <li><strong>Ініціалізація:</strong> Зчитування налаштувань та створення нової папки у Google Drive.</li>
-                    <li><strong>Створення Data Table:</strong> Тимчасова таблиця в базі n8n для безпечного збору статистики без навантаження на API.</li>
-                    <li><strong>Виклик:</strong> Запуск Sub-Workflow рекурсії.</li>
-                    <li><strong>Агрегація:</strong> Вивантаження всіх зібраних типів файлів та агрегація Code-вузлом.</li>
-                    <li><strong>Звітність:</strong> Створення <code>.txt</code> файлу та відправка лога в Telegram.</li>
-                </ol>
-
-                <h4 class="text-lg text-purple-400 font-bold mb-3">Sub-Workflow (Рекурсія та обробка)</h4>
-                <ul class="list-disc pl-5 space-y-3 text-slate-300">
-                    <li>Вузол <code>Loop</code> для послідовної обробки файлів (захист від Out of Memory).</li>
-                    <li>
-                        <strong>Маршрутизація (Switch):</strong>
-                        <ul class="list-circle pl-6 mt-2 space-y-2 border-l border-slate-700 mb-4 ml-2">
-                            <li><em>Папки:</em> Викликає сам себе (рекурсія) → запис у Data Table.</li>
-                            <li><em>Зображення:</em> Завантажується → <code>Edit Image</code> (динамічні формули) → запис у Data Table.</li>
-                            <li><em>Інше:</em> Пряме копіювання.</li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <h3 class="text-xl font-bold mt-12 mb-6 text-white border-b border-slate-800 pb-2">4. Обмеження та масштабування</h3>
-                <div class="bg-orange-500/10 border-l-4 border-orange-500 p-5 rounded-r-xl">
-                    <p class="text-slate-300 leading-relaxed mb-4">
-                        <strong>Ліміти API (Rate Limiting):</strong> У поточній конфігурації процес виконується на максимальній швидкості. При масивних копіюваннях можлива помилка <code>429 Too Many Requests</code>.
-                    </p>
-                    <p class="text-slate-300 leading-relaxed">
-                        <strong class="text-orange-400 font-mono">Рекомендація для Production:</strong> Додати вузол <code>Wait (1 сек)</code> в кінець циклу Loop у підпроцесі, а також увімкнути <code>Retry On Fail (3 спроби)</code> у налаштуваннях вузлів Google Drive для забезпечення відмовостійкості.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-10 border-t border-slate-800 bg-black text-center text-slate-500 text-sm font-mono">
-        <p>&copy; 2026 Yurii Buzaiev. Crafted for Vira Games Technical Test.</p>
-    </footer>
-
-    <!-- Form Script -->
     <script>
+        // Checkbox logic
+        const cb = document.getElementById('n8nConfirm');
+        const btn = document.getElementById('submitBtn');
+
+        cb.addEventListener('change', (e) => {
+            if(e.target.checked) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        });
+
+        // Form Submission Logic
         document.getElementById('scanForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const btn = document.getElementById('submitBtn');
-            const msg = document.getElementById('formMessage');
+            const consoleBox = document.getElementById('resultConsole');
             const url = document.getElementById('driveUrl').value;
             const dest = document.getElementById('destName').value || 'ViraGames_Tech_Spec';
             
             // UI Loading state
-            btn.innerHTML = '<div class="spinner"></div> Initiating Matrix...';
+            btn.innerHTML = '<div class="spinner"></div> Transmitting...';
             btn.classList.add('opacity-80', 'cursor-wait');
             btn.disabled = true;
-            msg.className = 'hidden';
+            
+            consoleBox.innerHTML = `<span class="text-primary animate-pulse">Establishing connection to Webhook...</span>`;
 
             const webhookUrl = 'https://n8n-stage.niko-tech.eu/webhook/b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff';
 
             try {
-                // Post to n8n webhook
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -301,22 +268,32 @@
                     })
                 });
 
-                if(response.ok) {
-                    msg.innerHTML = '<i class="fa-solid fa-circle-check text-lg"></i> Scanner Payload Delivered to n8n Webhook!';
-                    msg.className = 'block text-center text-sm mt-4 rounded-lg py-3 px-4 flex items-center justify-center gap-2 bg-green-500/20 text-green-400 border border-green-500/30';
+                // Attempt to parse JSON response or get text
+                let data;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await response.json();
                 } else {
-                    throw new Error('Network response was not ok');
+                    data = await response.text();
+                }
+
+                if(response.ok) {
+                    // Success render
+                    const formattedJson = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
+                    consoleBox.className = "flex-grow bg-base border border-bordercolor rounded-lg p-4 font-mono text-xs overflow-x-auto text-green-400";
+                    consoleBox.innerHTML = `<div><span class="text-zinc-500"># HTTP 200 OK</span><br><pre class="mt-2">${formattedJson || 'Workflow executed successfully.'}</pre></div>`;
+                } else {
+                    throw new Error(`HTTP Error ${response.status}: ${JSON.stringify(data)}`);
                 }
             } catch (error) {
-                msg.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-lg"></i> CORS Error or Webhook Offline (Check Console)';
-                msg.className = 'block text-center text-sm mt-4 rounded-lg py-3 px-4 flex items-center justify-center gap-2 bg-red-500/20 text-red-400 border border-red-500/30';
+                // Error render
+                consoleBox.className = "flex-grow bg-base border border-bordercolor rounded-lg p-4 font-mono text-xs overflow-x-auto text-red-400";
+                consoleBox.innerHTML = `<div><span class="text-zinc-500"># ERROR CAUGHT</span><br><pre class="mt-2 text-wrap">${error.message}</pre></div>`;
             } finally {
-                btn.innerHTML = '<i class="fa-solid fa-radar font-xl"></i> Scan Directory Again';
+                // Restore button state
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane text-sm"></i> Transmit Payload';
                 btn.classList.remove('opacity-80', 'cursor-wait');
                 btn.disabled = false;
-                
-                // Clear input
-                document.getElementById('driveUrl').value = '';
             }
         });
     </script>
