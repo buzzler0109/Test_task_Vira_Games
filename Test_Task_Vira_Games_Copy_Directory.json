@@ -47,7 +47,7 @@
             {
               "id": "47523e79-316f-45b2-99d4-06429c0656b6",
               "name": "destName",
-              "value": "=Buzaiev_Tech_Spec_{{ $now.format('dd-MM-yyyy') }}",
+              "value": "={{ $json.body.lastName }}_Tech_Spec_{{ $now.format('dd-MM-yyyy') }}",
               "type": "string"
             },
             {
@@ -65,7 +65,7 @@
             {
               "id": "eb7ae9ba-5b04-4db5-851f-d104afafc50a",
               "name": "url\t",
-              "value": "https://drive.google.com/drive/folders/1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
+              "value": "={{ $json.webhookUrl }}",
               "type": "string"
             }
           ]
@@ -200,7 +200,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const rows = $input.all();\nconst config = $('Config').first().json;\nconst destFolderId = $('Create Dest Folder').first().json.id;\n\nlet totalFiles = 0;\nlet totalFolders = 0;\nconst typeStats = {};\n\n// Считаем файлы и группируем их по типам\nrows.forEach(row => {\n  const mimeType = row.json.MimeType || row.json.mimeType || 'unknown';\n  \n  if (mimeType === 'application/vnd.google-apps.folder') {\n    totalFolders++;\n  } else {\n    totalFiles++;\n    let type = 'інше';\n    if (mimeType.startsWith('image/')) type = 'зображення';\n    else if (mimeType.startsWith('video/')) type = 'відео';\n    else if (mimeType.includes('pdf')) type = 'pdf';\n    else if (mimeType.includes('document')) type = 'документи';\n\n    typeStats[type] = (typeStats[type] || 0) + 1;\n  }\n});\n\n// === ИСПРАВЛЕННЫЙ БЛОК ВРЕМЕНИ ===\nconst rawStartTime = config[\"startTime\\t\"] || config.startTime;\nconst startTime = rawStartTime ? new Date(rawStartTime).toLocaleString('uk-UA') : \"Невідомо\";\nconst endTime = new Date().toLocaleString('uk-UA');\n\nconst sourceUrl = config[\"url\\t\"] || config.url || \"Невідомо\";\nconst destUrl = `https://drive.google.com/drive/folders/${destFolderId}`;\n\n// Формируем текст\nlet reportContent = `Copy Info: ${config.destName}\\n`;\nreportContent += `=======================================\\n`;\nreportContent += `Усього файлів: ${totalFiles}\\n`;\nreportContent += `Усього папок: ${totalFolders + 1}\\n\\n`;\n\nreportContent += `Розподіл за типами:\\n`;\nfor (const [name, count] of Object.entries(typeStats)) {\n  reportContent += `- ${name}: ${count} шт.\\n`;\n}\n\nreportContent += `\\nЧас старту: ${startTime}\\n`;\nreportContent += `Час завершення: ${endTime}\\n`;\nreportContent += `URL оригіналу: ${sourceUrl}\\n`;\nreportContent += `URL копії: ${destUrl}\\n`;\n\nreturn {\n  json: { \n    reportContent: reportContent, \n    totalFiles: totalFiles, \n    totalFolders: totalFolders,\n    fileName: `copy_info_Buzaiev_${config.dateStr}.txt`,\n    destFolderId: destFolderId,\n    telegramMsg: `✅ Роботу завершено!\\n📂 Створено папок: ${totalFolders + 1}\\n📄 Скопійовано файлів: ${totalFiles}` \n  }\n};"
+        "jsCode": "const rows = $input.all();\nconst config = $('Config').first().json;\nconst surname = $('Webhook').first().json.body.lastName;\nconst destFolderId = $('Create Dest Folder').first().json.id;\n\nlet totalFiles = 0;\nlet totalFolders = 0;\nconst typeStats = {};\n\n// Считаем файлы и группируем их по типам\nrows.forEach(row => {\n  const mimeType = row.json.MimeType || row.json.mimeType || 'unknown';\n  \n  if (mimeType === 'application/vnd.google-apps.folder') {\n    totalFolders++;\n  } else {\n    totalFiles++;\n    let type = 'інше';\n    if (mimeType.startsWith('image/')) type = 'зображення';\n    else if (mimeType.startsWith('video/')) type = 'відео';\n    else if (mimeType.includes('pdf')) type = 'pdf';\n    else if (mimeType.includes('document')) type = 'документи';\n    else if (mimeType.includes('text/plain')) type = 'документи';\n\n    typeStats[type] = (typeStats[type] || 0) + 1;\n  }\n});\n\n// === ИСПРАВЛЕННЫЙ БЛОК ВРЕМЕНИ ===\nconst rawStartTime = config[\"startTime\\t\"] || config.startTime;\nconst startTime = rawStartTime ? new Date(rawStartTime).toLocaleString('uk-UA') : \"Невідомо\";\nconst endTime = new Date().toLocaleString('uk-UA');\n\nconst sourceUrl = config[\"url\\t\"] || config.url || \"Невідомо\";\nconst destUrl = `https://drive.google.com/drive/folders/${destFolderId}`;\n\n// Формируем текст\nlet reportContent = `Copy Info: ${config.destName}\\n`;\nreportContent += `=======================================\\n`;\nreportContent += `Усього файлів: ${totalFiles}\\n`;\nreportContent += `Усього папок: ${totalFolders + 1}\\n\\n`;\n\nreportContent += `Розподіл за типами:\\n`;\nfor (const [name, count] of Object.entries(typeStats)) {\n  reportContent += `- ${name}: ${count} шт.\\n`;\n}\n\nreportContent += `\\nЧас старту: ${startTime}\\n`;\nreportContent += `Час завершення: ${endTime}\\n`;\nreportContent += `URL оригіналу: ${sourceUrl}\\n`;\nreportContent += `URL копії: ${destUrl}\\n`;\n\nreturn {\n  json: { \n    reportContent: reportContent, \n    totalFiles: totalFiles, \n    totalFolders: totalFolders,\n    fileName: `copy_info_${surname}_${config.dateStr}.txt`,\n    destFolderId: destFolderId,\n    telegramMsg: `✅ Роботу завершено!\\n📂 Створено папок: ${totalFolders + 1}\\n📄 Скопійовано файлів: ${totalFiles}` \n  }\n};"
       },
       "id": "4c807455-efad-457a-8848-6b21d9d76588",
       "name": "Generate Report Data",
@@ -244,10 +244,8 @@
         "operation": "get",
         "dataTableId": {
           "__rl": true,
-          "value": "nd96T1sWjvOdMfYq",
-          "mode": "list",
-          "cachedResultName": "copy_stats",
-          "cachedResultUrl": "/projects/Lu6V0dBtLX41B53o/datatables/nd96T1sWjvOdMfYq"
+          "value": "={{ $('Create a data table').item.json.id }}",
+          "mode": "id"
         },
         "returnAll": true
       },
@@ -267,14 +265,14 @@
         "operation": "delete",
         "dataTableId": {
           "__rl": true,
-          "value": "=copy_stats",
-          "mode": "name"
+          "value": "={{ $('Create a data table').item.json.id }}",
+          "mode": "id"
         }
       },
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        448,
+        656,
         272
       ],
       "id": "b7d85609-1e20-4e5a-95c6-8182165271e2",
@@ -289,7 +287,7 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        224,
+        432,
         272
       ],
       "id": "e5581479-fd2a-4c42-8956-e40f2083811e",
@@ -304,8 +302,15 @@
     },
     {
       "parameters": {
+        "httpMethod": "POST",
         "path": "b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*",
+          "responseCode": {
+            "values": {}
+          },
+          "responseData": "={\n  \"status\": \"started\",\n  \"message\": \"Процес запущено...\",\n  \"job_id\": \"{{ $execution.id }}\"\n}"
+        }
       },
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
@@ -316,6 +321,51 @@
       "id": "a0546fb7-76ae-4d8b-9169-fa2f23932910",
       "name": "Webhook",
       "webhookId": "b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff"
+    },
+    {
+      "parameters": {
+        "content": "## Settings\nChoose \"Execute Recursion\" from list"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -512,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "a5329c56-308a-4772-9936-f5adf6bb39fc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "createFromText",
+        "content": "={{ $json.reportContent }}",
+        "name": "={{ $json.fileName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.destFolderId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        224,
+        272
+      ],
+      "id": "7138a13c-31c7-4d50-ba6e-51fb6283cdcf",
+      "name": "Create file from text",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "V8uEDdu7AGahXa3C",
+          "name": "Google Drive account"
+        }
+      }
     }
   ],
   "connections": {
@@ -378,7 +428,7 @@
       "main": [
         [
           {
-            "node": "Send a text message",
+            "node": "Create file from text",
             "type": "main",
             "index": 0
           }
@@ -407,6 +457,11 @@
         ]
       ]
     },
+    "Delete a data table": {
+      "main": [
+        []
+      ]
+    },
     "Send a text message": {
       "main": [
         [
@@ -428,16 +483,53 @@
           }
         ]
       ]
+    },
+    "Create file from text": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "pinData": {
-    "Config": [
+    "Webhook": [
       {
-        "sourceId\t": "1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
-        "destName": "Buzaiev_Tech_Spec_17-04-2026",
-        "dateStr": "17-04-2026",
-        "startTime\t": "2026-04-17T10:27:48.991-04:00",
-        "url\t": "https://drive.google.com/drive/folders/1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9"
+        "headers": {
+          "host": "n8n-stage.niko-tech.eu",
+          "x-real-ip": "93.103.183.92",
+          "x-forwarded-for": "93.103.183.92",
+          "x-forwarded-proto": "https",
+          "connection": "upgrade",
+          "content-length": "201",
+          "sec-ch-ua-platform": "\"Windows\"",
+          "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36",
+          "sec-ch-ua": "\"Google Chrome\";v=\"147\", \"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"147\"",
+          "content-type": "application/json",
+          "sec-ch-ua-mobile": "?0",
+          "accept": "*/*",
+          "origin": "https://test-task-vira-games.vercel.app",
+          "sec-fetch-site": "cross-site",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-dest": "empty",
+          "referer": "https://test-task-vira-games.vercel.app/",
+          "accept-encoding": "gzip, deflate, br, zstd",
+          "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7,tr;q=0.6"
+        },
+        "params": {},
+        "query": {},
+        "body": {
+          "sourceUrl": "https://drive.google.com/drive/u/0/folders/1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
+          "destinationName": "BUZAIEV_Tech_Spec_17-04-2026",
+          "lastName": "BUZAIEV",
+          "timestamp": "2026-04-17T21:05:14.810Z"
+        },
+        "webhookUrl": "https://n8n-stage.niko-tech.eu/webhook/b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff",
+        "executionMode": "production"
       }
     ]
   },

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,26 +26,33 @@
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
+
     <style>
         /* Force dark theme defaults */
         body {
-            background-color: #09090b; /* zinc-950 */
-            color: #fafafa; /* zinc-50 */
+            background-color: #09090b;
+            /* zinc-950 */
+            color: #fafafa;
+            /* zinc-50 */
         }
-        
+
         .bento-card {
-            background-color: #18181b; /* zinc-900 */
-            border: 1px solid #27272a; /* zinc-800 */
+            background-color: #18181b;
+            /* zinc-900 */
+            border: 1px solid #27272a;
+            /* zinc-800 */
             border-radius: 1.5rem;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .bento-card:hover {
-            border-color: #3f3f46; /* zinc-700 */
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+            border-color: #3f3f46;
+            /* zinc-700 */
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
         }
 
         /* Checkbox Styling */
@@ -61,10 +69,12 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+
         input[type="checkbox"].custom-cb:checked {
             background-color: #3b82f6;
             border-color: #3b82f6;
         }
+
         input[type="checkbox"].custom-cb:checked::after {
             content: '✓';
             color: white;
@@ -73,70 +83,84 @@
         }
 
         .spinner {
-            border: 3px solid rgba(255,255,255,0.1);
+            border: 3px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             border-top: 3px solid #fff;
             width: 20px;
             height: 20px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         .custom-scrollbar::-webkit-scrollbar {
             width: 8px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #09090b; 
+            background: #09090b;
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #27272a; 
+            background: #27272a;
             border-radius: 4px;
         }
+
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #3f3f46; 
+            background: #3f3f46;
         }
     </style>
 </head>
+
 <body class="antialiased min-h-screen py-12 px-4 sm:px-8">
 
     <div class="max-w-6xl mx-auto space-y-8">
-        
+
         <!-- Header -->
         <header class="flex justify-between items-end pb-6 border-b border-zinc-800">
             <div>
                 <h1 class="font-display text-3xl font-bold tracking-tight text-white">Scanner Workspace</h1>
                 <p class="text-zinc-400 font-sans mt-2">Vira Games Technical Automation</p>
             </div>
-            <div class="hidden sm:inline-flex items-center gap-2 text-xs font-mono bg-zinc-900 px-3 py-1.5 rounded-full border border-zinc-700 text-zinc-300 shadow-lg">
+            <div
+                class="hidden sm:inline-flex items-center gap-2 text-xs font-mono bg-zinc-900 px-3 py-1.5 rounded-full border border-zinc-700 text-zinc-300 shadow-lg">
                 <i class="fa-solid fa-circle-nodes text-n8n text-base"></i> n8n Automation
             </div>
         </header>
 
         <!-- Bento Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
+
             <!-- Left Column: Form & Action -->
             <div class="lg:col-span-7 flex flex-col gap-6">
-                
+
                 <!-- Form Card -->
                 <div class="bento-card p-8 flex-grow flex flex-col justify-between relative overflow-hidden">
                     <!-- Deco blur -->
-                    <div class="absolute -top-32 -right-32 w-64 h-64 bg-primary opacity-10 blur-3xl rounded-full pointer-events-none"></div>
+                    <div
+                        class="absolute -top-32 -right-32 w-64 h-64 bg-primary opacity-10 blur-3xl rounded-full pointer-events-none">
+                    </div>
 
                     <div>
-                        <div class="inline-flex items-center justify-center w-12 h-12 bg-n8n/20 text-n8n rounded-xl mb-6 border border-n8n/30">
-                            <!-- SVG n8n logo approximation -->
-                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M11 2v4.228A5.986 5.986 0 008.228 11H4V2h7zm1 0h7v9h-4.228A5.986 5.986 0 0013 6.228V2zM2 13h4.228A5.986 5.986 0 0011 17.772V22H2v-9zm10 9v-4.228A5.986 5.986 0 0015.772 13H20v9h-8z"/></svg>
-                        </div>
                         <h2 class="font-display text-2xl font-bold mb-2 text-white">Execute Scan</h2>
-                        <p class="text-zinc-400 text-sm mb-8">Initialize the dynamic workspace cloning workflow. Ensure the background n8n environment is active and waiting for payload.</p>
+                        <p class="text-zinc-400 text-sm mb-8">Initialize the dynamic workspace cloning workflow. Ensure
+                            the background n8n environment is active and waiting for payload.</p>
                     </div>
 
                     <form id="scanForm" class="space-y-6">
-                        
+
                         <!-- Inputs -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">n8n Webhook URL <span class="text-n8n">*</span></label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">n8n Webhook URL
+                                <span class="text-n8n">*</span></label>
                             <input type="url" id="webhookUrl" required
                                 class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-n8n focus:ring-1 focus:ring-n8n transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
                                 placeholder="https://your-n8n-instance.com/webhook/..."
@@ -144,25 +168,32 @@
                         </div>
 
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Source Folder URL <span class="text-n8n">*</span></label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Source Folder URL
+                                <span class="text-n8n">*</span></label>
                             <input type="url" id="driveUrl" required
                                 class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-n8n focus:ring-1 focus:ring-n8n transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
                                 placeholder="https://drive.google.com/drive/folders/...">
                         </div>
-                        
+
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Candidate's Last Name <span class="text-n8n">*</span></label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Candidate's Last
+                                Name <span class="text-n8n">*</span></label>
                             <input type="text" id="lastName" required
                                 class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-n8n focus:ring-1 focus:ring-n8n transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
                                 placeholder="e.g. Buzaiev">
-                            <p class="text-xs text-zinc-500 mt-1">This will be used to generate the destination folder name: <span class="text-zinc-300 font-mono">[LastName]_Tech_Spec_DD-MM-YYYY</span></p>
+                            <p class="text-xs text-zinc-500 mt-1">This will be used to generate the destination folder
+                                name: <span class="text-zinc-300 font-mono">[LastName]_Tech_Spec_DD-MM-YYYY</span></p>
                         </div>
 
                         <!-- Checkbox Confirmation (Moved under form) -->
-                        <div class="flex items-start gap-3 bg-zinc-950/50 p-4 rounded-xl border border-zinc-800 mt-6 cursor-pointer hover:border-zinc-600 transition-colors" onclick="document.getElementById('n8nConfirm').click()">
+                        <div class="flex items-start gap-3 bg-zinc-950/50 p-4 rounded-xl border border-zinc-800 mt-6 cursor-pointer hover:border-zinc-600 transition-colors"
+                            onclick="document.getElementById('n8nConfirm').click()">
                             <input type="checkbox" id="n8nConfirm" class="custom-cb mt-0.5">
-                            <label class="text-sm font-medium text-zinc-400 cursor-pointer pointer-events-none leading-snug">
-                                I confirm that both <span class="text-zinc-200">Main Container</span> and <span class="text-zinc-200">Recursive</span> n8n workflows have been imported and activated in my workspace.
+                            <label
+                                class="text-sm font-medium text-zinc-400 cursor-pointer pointer-events-none leading-snug">
+                                I confirm that both <span class="text-zinc-200">Main Container</span> and <span
+                                    class="text-zinc-200">Recursive</span> n8n workflows have been imported and
+                                activated in my workspace.
                             </label>
                         </div>
 
@@ -178,8 +209,9 @@
                     <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-terminal text-zinc-500"></i> Response Console
                     </h3>
-                    
-                    <div id="resultConsole" class="flex-grow bg-zinc-950 border border-zinc-800 rounded-lg p-4 font-mono text-xs overflow-x-auto text-zinc-500 flex items-center justify-center shadow-inner">
+
+                    <div id="resultConsole"
+                        class="flex-grow bg-zinc-950 border border-zinc-800 rounded-lg p-4 font-mono text-xs overflow-x-auto text-zinc-500 flex items-center justify-center shadow-inner">
                         Awaiting execution...
                     </div>
                 </div>
@@ -188,14 +220,16 @@
 
             <!-- Right Column: Resources & Docs -->
             <div class="lg:col-span-5 flex flex-col gap-6">
-                
+
                 <!-- Downloads -->
                 <div class="bento-card p-6">
                     <h3 class="font-display font-semibold text-lg mb-4 text-white">Required Assets</h3>
                     <div class="space-y-3">
-                        <a href="Test_Task_Vira_Games_Copy_Directory.json" download class="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-primary/50 transition-colors group cursor-pointer shadow-sm">
+                        <a href="Test_Task_Vira_Games_Copy_Directory.json" download
+                            class="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-primary/50 transition-colors group cursor-pointer shadow-sm">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded bg-primary/10 flex flex-col items-center justify-center relative border border-primary/20">
+                                <div
+                                    class="w-8 h-8 rounded bg-primary/10 flex flex-col items-center justify-center relative border border-primary/20">
                                     <i class="fa-solid fa-code text-primary text-xs"></i>
                                 </div>
                                 <div>
@@ -203,12 +237,15 @@
                                     <p class="text-xs text-zinc-500">Controller config</p>
                                 </div>
                             </div>
-                            <i class="fa-solid fa-download text-zinc-600 group-hover:text-primary transition-colors"></i>
+                            <i
+                                class="fa-solid fa-download text-zinc-600 group-hover:text-primary transition-colors"></i>
                         </a>
-                        
-                        <a href="Test_Task_Vira_Games_Execute_Recursion.json" download class="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-purple-500/50 transition-colors group cursor-pointer shadow-sm">
+
+                        <a href="Test_Task_Vira_Games_Execute_Recursion.json" download
+                            class="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-purple-500/50 transition-colors group cursor-pointer shadow-sm">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded bg-purple-500/10 flex flex-col items-center justify-center relative border border-purple-500/20">
+                                <div
+                                    class="w-8 h-8 rounded bg-purple-500/10 flex flex-col items-center justify-center relative border border-purple-500/20">
                                     <i class="fa-solid fa-microchip text-purple-400 text-xs"></i>
                                 </div>
                                 <div>
@@ -216,36 +253,122 @@
                                     <p class="text-xs text-zinc-500">Recursive Engine</p>
                                 </div>
                             </div>
-                            <i class="fa-solid fa-download text-zinc-600 group-hover:text-purple-400 transition-colors"></i>
+                            <i
+                                class="fa-solid fa-download text-zinc-600 group-hover:text-purple-400 transition-colors"></i>
+                        </a>
+
+                        <a href="Test_Task_Vira_Games_Polling.json" download
+                            class="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-blue-500/50 transition-colors group cursor-pointer shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded bg-blue-500/10 flex flex-col items-center justify-center relative border border-blue-500/20">
+                                    <i class="fa-solid fa-bolt text-blue-400 text-xs"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-zinc-200">Polling_Workflow.json</p>
+                                    <p class="text-xs text-zinc-500">Polling Endpoint</p>
+                                </div>
+                            </div>
+                            <i
+                                class="fa-solid fa-download text-zinc-600 group-hover:text-blue-400 transition-colors"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Documentation -->
                 <div class="bento-card p-6 flex-grow overflow-auto max-h-[600px] custom-scrollbar">
-                    <h3 class="font-display font-semibold text-lg mb-4 pb-4 border-b border-zinc-800 text-white">Architecture Overview</h3>
-                    
+                    <h3 class="font-display font-semibold text-lg mb-4 pb-4 border-b border-zinc-800 text-white">
+                        Project: Scalable Recursive Google Drive Automation</h3>
+
                     <div class="prose prose-sm prose-invert max-w-none text-zinc-400">
                         <p class="mb-4 text-zinc-300">
-                            Автоматизований процес для рекурсивного копіювання вмісту папок Google Drive зі збереженням ієрархії, динамічною обробкою зображень (watermark) та генерацією фінального звіту.
+                            <strong>Platform:</strong> n8n (Self-hosted)<br>
+                            <strong>Objective:</strong> A highly available, asynchronous automation system designed to
+                            perform recursive cloning of Google Drive directories, execute dynamic media processing
+                            (watermarking), and aggregate real-time statistics without hitting server timeout limits.
                         </p>
-                        
-                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">1. Ініціалізація</h4>
-                        <p class="mb-4">Зчитування налаштувань. Створення <code>Data Table</code> в базі n8n для безпечного збору статистики без навантаження на API.</p>
-                        
-                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">2. Рекурсія (Sub-Workflow)</h4>
-                        <ul class="list-disc pl-4 mb-4 space-y-2 text-zinc-400 marker:text-primary">
-                            <li>Вузол <code class="bg-zinc-800 text-zinc-300 px-1 py-0.5 rounded">Loop</code> для послідовної обробки (захист від OOM).</li>
-                            <li><strong class="text-white">Папки:</strong> Викликає сам себе (рекурсія).</li>
-                            <li><strong class="text-white">Зображення:</strong> <code class="bg-zinc-800 text-zinc-300 px-1 py-0.5 rounded">Edit Image</code> (динамічні формули) → запис у БД.</li>
+
+                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">1. How to run the workflow (Deployment)</h4>
+                        <p class="mb-2">To deploy this system, you must configure its three interconnected
+                            micro-workflows:</p>
+                        <ul class="list-disc pl-4 mb-4 space-y-2 marker:text-primary">
+                            <li><strong class="text-white">Import:</strong> Import the three provided JSON files into
+                                your n8n instance: `Main_Orchestrator`, `Recursive_Worker`, and `Status_Checker`.</li>
+                            <li><strong class="text-white">Activate Microservices:</strong> Open both the
+                                Recursive_Worker and Status_Checker workflows. Toggle them to Active (Publish).</li>
+                            <li><strong class="text-white">Link the Orchestrator:</strong> Open the Main_Orchestrator
+                                workflow. Locate the <em>Execute Sub-workflow</em> node and Choose "Execute Recursion"
+                                from list. Set the Orchestrator to Active.</li>
                         </ul>
 
-                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">3. Звітність</h4>
-                        <p class="mb-4">Агрегація вивантажених з БД даних. Створення логу <code class="bg-zinc-800 text-zinc-300 px-1 py-0.5 rounded">.txt</code> у створеній директорії та відправка нотифікації в Telegram.</p>
+                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">2. Required Credentials</h4>
+                        <p class="mb-2">The following API connections must be configured:</p>
+                        <ul class="list-disc pl-4 mb-4 space-y-2 marker:text-primary">
+                            <li><strong class="text-white">Google Drive OAuth2 API:</strong> Requires scopes for
+                                reading, uploading, modifying, and creating files/folders.</li>
+                            <li><strong class="text-white">Telegram API:</strong> Requires a Bot Token generated via
+                                BotFather to deliver the final execution report.</li>
+                        </ul>
 
-                        <div class="mt-8 p-4 rounded-xl bg-orange-500/10 border border-orange-500/20">
-                            <strong class="text-orange-400 block mb-1">⚠️ Масштабування для Продакшену:</strong> 
-                            <span class="text-orange-200/70 text-xs leading-relaxed">Рекомендується додати вузол Wait (1 сек) у Loop підпроцесу та Retry On Fail для G-Drive вузлів.</span>
+                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">3. Workflow Logic & Architecture (How it
+                            works)</h4>
+                        <p class="mb-4">To ensure high availability and bypass browser timeout limits, the logic is
+                            decoupled into a three-tier microservice architecture:</p>
+
+                        <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-lg mb-4">
+                            <strong class="text-white block mb-2">Workflow A: Main Orchestrator (The Manager)</strong>
+                            <p class="text-sm">Acts as the entry point. It receives the webhook from the website and
+                                immediately returns an asynchronous HTTP 200 OK response containing a unique job_id.</p>
+                            <p class="text-sm mt-2">Initializes the destination environment. Provisions an ephemeral n8n
+                                Data Table (`copy_stats_{job_id}`) to act as a thread-safe local ledger. Triggers the
+                                Recursive Worker. Upon completion, reads the ledger, generates report, uploads to Drive,
+                                sends Telegram notification, and deletes the temporary table.</p>
+                        </div>
+
+                        <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-lg mb-4">
+                            <strong class="text-white block mb-2">Workflow B: Recursive Worker (The Engine)</strong>
+                            <p class="text-sm">Traverses the directory structure utilizing a Loop pattern to process
+                                items sequentially, preventing server Out-of-Memory failures.</p>
+                            <ul class="list-disc pl-4 mt-2 space-y-1 text-sm marker:text-primary">
+                                <li><strong class="text-white">Folders:</strong> Creates a sub-directory and calls
+                                    itself (recursion).</li>
+                                <li><strong class="text-white">Images:</strong> Downloads file, dynamically calculates
+                                    coordinates, applies watermark, uploads it.</li>
+                                <li><strong class="text-white">Standard Files:</strong> Direct API copy.</li>
+                                <li><strong class="text-white">Logging:</strong> Instantly logs every successful
+                                    transfer into the Data Table.</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-zinc-900 border border-zinc-800 p-4 rounded-lg mb-4">
+                            <strong class="text-white block mb-2">Workflow C: Status Checker (Polling Service)</strong>
+                            <p class="text-sm">A lightweight GET endpoint. While the Worker processes files, the
+                                frontend pings this service using the job_id. It queries the Data Table and returns the
+                                current file count.</p>
+                        </div>
+
+                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">4. Technical Limitations & Safeguards</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <strong class="text-white block">Connection Timeouts (504 Gateway Error):</strong>
+                                <p class="text-sm">Because copying hundreds of files takes minutes, a standard HTTP
+                                    request will be killed.</p>
+                                <p class="text-sm text-green-400 mt-1"><i class="fa-solid fa-check mr-1"></i> Solution:
+                                    Asynchronous webhook response combined with Status_Checker polling.</p>
+                            </div>
+                            <div>
+                                <strong class="text-white block">Google Drive API Quotas (429 Too Many
+                                    Requests):</strong>
+                                <p class="text-sm">High-speed cloning can trigger rate limits from Google.</p>
+                                <p class="text-sm text-green-400 mt-1"><i class="fa-solid fa-check mr-1"></i> Solution:
+                                    Recursive_Worker nodes are fortified with Retry On Fail (3 attempts, exponential
+                                    backoff).</p>
+                            </div>
+                            <div>
+                                <strong class="text-white block">Recursion Depth:</strong>
+                                <p class="text-sm">Maximum depth is bound by n8n’s limits on nested sub-workflows
+                                    (safely tested up to 15 levels).</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -260,7 +383,7 @@
         const btn = document.getElementById('submitBtn');
 
         cb.addEventListener('change', (e) => {
-            if(e.target.checked) {
+            if (e.target.checked) {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
                 btn.classList.add('shadow-[0_0_20px_rgba(234,82,82,0.3)]');
@@ -276,21 +399,21 @@
 
         document.getElementById('scanForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const consoleBox = document.getElementById('resultConsole');
             const mainWebhookUrl = document.getElementById('webhookUrl').value.trim();
             const url = document.getElementById('driveUrl').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
-            
+
             // Format destination name logic matching n8n expectations
             const dateStr = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
             const destName = `${lastName || 'Unknown'}_Tech_Spec_${dateStr}`;
-            
+
             // UI Loading State
             btn.innerHTML = '<div class="spinner"></div> Init Job...';
             btn.classList.add('opacity-80', 'cursor-wait');
             btn.disabled = true;
-            
+
             consoleBox.classList.remove('items-center', 'justify-center');
             consoleBox.classList.add('items-start', 'justify-start');
             consoleBox.innerHTML = `<div class="w-full" id="logContainer">
@@ -309,15 +432,18 @@
             };
 
             try {
+                // Wait for dramatic effect (2 seconds) to show pulsing animation
+                await new Promise(r => setTimeout(r, 2000));
+
                 // 1. Fire the main job POST request
                 const response = await fetch(mainWebhookUrl, {
                     method: 'POST',
                     mode: 'cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         sourceUrl: url,
-                        destinationName: destName,  
-                        lastName: lastName,         
+                        destinationName: destName,
+                        lastName: lastName,
                         timestamp: new Date().toISOString()
                     })
                 });
@@ -329,7 +455,7 @@
                     data = await response.json();
                 } else {
                     data = await response.text();
-                    try { data = JSON.parse(data); } catch(e) {} // Fallback for bad headers
+                    try { data = JSON.parse(data); } catch (e) { } // Fallback for bad headers
                 }
 
                 // Stop pulsing
@@ -340,13 +466,13 @@
                     initLine.innerText = '> Connection established';
                 }
 
-                if(response.ok) {
+                if (response.ok) {
                     // Check if it's the expected job format
                     if (data && data.status === 'started' && data.job_id) {
                         appendLog(`З'єднання встановлено. Починаємо копіювання... (Job ID: ${data.job_id})`, 'text-primary');
                         // Change button to show processing spinner instead of reverting
                         btn.innerHTML = '<div class="spinner"></div> Running...';
-                        
+
                         // Start polling
                         startPolling(data.job_id, mainWebhookUrl);
                     } else {
@@ -371,7 +497,7 @@
             } catch (error) {
                 const initLine = document.getElementById('initLine');
                 if (initLine) initLine.classList.remove('animate-pulse');
-                
+
                 appendLog(`CONNECTION FAILED: ${error.message}`, "text-red-400", "✗");
                 appendLog(`Hint: Check if your n8n instance allows CORS requests from github.io, or if the webhook is currently active.`, "text-zinc-600", "");
                 resetButton();
@@ -385,31 +511,31 @@
             try {
                 const urlObj = new URL(mainWebhookUrl);
                 // We assume /webhook/check-status
-                statusWebhookUrl = urlObj.origin + '/webhook/check-status'; 
-            } catch(e) {
+                statusWebhookUrl = urlObj.origin + '/webhook/check-status';
+            } catch (e) {
                 statusWebhookUrl = 'https://n8n-stage.niko-tech.eu/webhook/check-status'; // fallback
             }
 
             const logContainer = document.getElementById('logContainer');
             const consoleBox = document.getElementById('resultConsole');
-            
+
             // To prevent log spam, we update the same line during processing
             logContainer.innerHTML += `<br><span id="statusLine" class="text-zinc-300">⏳ Очікування статусу...</span>`;
             const statusLine = document.getElementById('statusLine');
 
             // Clear any lingering intervals
-            if(pollingIntervalId) clearInterval(pollingIntervalId);
+            if (pollingIntervalId) clearInterval(pollingIntervalId);
 
             pollingIntervalId = setInterval(async () => {
                 try {
                     const res = await fetch(`${statusWebhookUrl}?job_id=${jobId}`, { mode: 'cors' });
                     const statusData = await res.json();
-                    
+
                     const time = new Date().toLocaleTimeString();
 
                     if (statusData.status === 'processing') {
                         statusLine.innerHTML = `<span class="text-zinc-400">> [${time}]</span> <span class="text-primary">${statusData.message || 'Обробка...'}</span>`;
-                    } 
+                    }
                     else if (statusData.status === 'completed') {
                         statusLine.innerHTML = `<span class="text-zinc-400">> [${time}]</span> <span class="text-green-400">✓ ${statusData.message || 'Процес завершено!'}</span>`;
                         clearInterval(pollingIntervalId); // Stop the loop
@@ -441,4 +567,5 @@
         }
     </script>
 </body>
+
 </html>

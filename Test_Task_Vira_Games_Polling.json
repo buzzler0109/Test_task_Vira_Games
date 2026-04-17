@@ -1,0 +1,109 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "path": "check-status",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d95def28-6b1d-4301-b94d-1f8c916dcf34",
+      "name": "Webhook",
+      "webhookId": "97ac8ba2-dc66-4853-9b72-aad02e764388"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "copy_stats",
+          "mode": "name"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "58577f98-9758-462d-86af-3ba675adce07",
+      "name": "Get row(s)",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Проверяем, нашел ли предыдущий узел данные (или выдал ошибку, потому что таблица удалена)\nconst data = $input.all();\n\nif (data[0].json && data[0].json.error) {\n  // Таблицы нет = значит основной воркфлоу всё закончил и удалил её!\n  return { json: { status: \"completed\", message: \"✅ Всі файли успішно скопійовані!\" } };\n} else {\n  // Таблица есть, считаем сколько там строчек (файлов)\n  const copiedCount = data.length;\n  return { json: { status: \"processing\", count: copiedCount, message: `⏳ Скопійовано файлів: ${copiedCount}...` } };\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "44219043-ca11-48d8-9efe-422d7d28d4a0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        624,
+        0
+      ],
+      "id": "e99e0249-fcf2-4032-9855-9157af89ca60",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": "e072f3b77f245933d117201776d487603bc055cdeabb3b73d84481d6b9cd8118"
+  }
+}
