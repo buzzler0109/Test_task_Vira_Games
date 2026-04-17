@@ -41,7 +41,7 @@
             {
               "id": "e7fa2077-252a-42fb-8eae-c86a69119781",
               "name": "sourceId\t",
-              "value": "1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
+              "value": "={{ $json.body.sourceUrl.match(/[-\\w]{25,}/)[0] }}",
               "type": "string"
             },
             {
@@ -200,7 +200,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const rows = $input.all();\nconst config = $('Config').first().json;\nconst surname = $('Webhook').first().json.body.lastName;\nconst destFolderId = $('Create Dest Folder').first().json.id;\n\nlet totalFiles = 0;\nlet totalFolders = 0;\nconst typeStats = {};\n\n// Считаем файлы и группируем их по типам\nrows.forEach(row => {\n  const mimeType = row.json.MimeType || row.json.mimeType || 'unknown';\n  \n  if (mimeType === 'application/vnd.google-apps.folder') {\n    totalFolders++;\n  } else {\n    totalFiles++;\n    let type = 'інше';\n    if (mimeType.startsWith('image/')) type = 'зображення';\n    else if (mimeType.startsWith('video/')) type = 'відео';\n    else if (mimeType.includes('pdf')) type = 'pdf';\n    else if (mimeType.includes('document')) type = 'документи';\n    else if (mimeType.includes('text/plain')) type = 'документи';\n\n    typeStats[type] = (typeStats[type] || 0) + 1;\n  }\n});\n\n// === ИСПРАВЛЕННЫЙ БЛОК ВРЕМЕНИ ===\nconst rawStartTime = config[\"startTime\\t\"] || config.startTime;\nconst startTime = rawStartTime ? new Date(rawStartTime).toLocaleString('uk-UA') : \"Невідомо\";\nconst endTime = new Date().toLocaleString('uk-UA');\n\nconst sourceUrl = config[\"url\\t\"] || config.url || \"Невідомо\";\nconst destUrl = `https://drive.google.com/drive/folders/${destFolderId}`;\n\n// Формируем текст\nlet reportContent = `Copy Info: ${config.destName}\\n`;\nreportContent += `=======================================\\n`;\nreportContent += `Усього файлів: ${totalFiles}\\n`;\nreportContent += `Усього папок: ${totalFolders + 1}\\n\\n`;\n\nreportContent += `Розподіл за типами:\\n`;\nfor (const [name, count] of Object.entries(typeStats)) {\n  reportContent += `- ${name}: ${count} шт.\\n`;\n}\n\nreportContent += `\\nЧас старту: ${startTime}\\n`;\nreportContent += `Час завершення: ${endTime}\\n`;\nreportContent += `URL оригіналу: ${sourceUrl}\\n`;\nreportContent += `URL копії: ${destUrl}\\n`;\n\nreturn {\n  json: { \n    reportContent: reportContent, \n    totalFiles: totalFiles, \n    totalFolders: totalFolders,\n    fileName: `copy_info_${surname}_${config.dateStr}.txt`,\n    destFolderId: destFolderId,\n    telegramMsg: `✅ Роботу завершено!\\n📂 Створено папок: ${totalFolders + 1}\\n📄 Скопійовано файлів: ${totalFiles}` \n  }\n};"
+        "jsCode": "const rows = $input.all();\nconst config = $('Config').first().json;\nconst surname = $('Webhook').first().json.body.lastName;\nconst destFolderId = $('Create Dest Folder').first().json.id;\n\nlet totalFiles = 0;\nlet totalFolders = 0;\nconst typeStats = {};\n\n// Считаем файлы и группируем их по типам\nrows.forEach(row => {\n  const mimeType = row.json.MimeType || row.json.mimeType || 'unknown';\n  \n  if (mimeType === 'application/vnd.google-apps.folder') {\n    totalFolders++;\n  } else {\n    totalFiles++;\n    let type = 'інше';\n    if (mimeType.startsWith('image/')) type = 'зображення';\n    else if (mimeType.startsWith('video/')) type = 'відео';\n    else if (mimeType.includes('pdf')) type = 'pdf';\n    else if (mimeType.includes('document')) type = 'документи';\n    else if (mimeType.includes('text/plain')) type = 'документи';\n\n    typeStats[type] = (typeStats[type] || 0) + 1;\n  }\n});\n\n// === ИСПРАВЛЕННЫЙ БЛОК ВРЕМЕНИ ===\nconst rawStartTime = config[\"startTime\\t\"] || config.startTime;\nconst startTime = rawStartTime ? new Date(rawStartTime).toLocaleString('uk-UA') : \"Невідомо\";\nconst endTime = new Date().toLocaleString('uk-UA');\n\nconst sourceUrl = $('Webhook').first().json.body.sourceUrl || \"Невідомо\";\nconst destUrl = `https://drive.google.com/drive/folders/${destFolderId}`;\n\n// Формируем текст\nlet reportContent = `Copy Info: ${config.destName}\\n`;\nreportContent += `=======================================\\n`;\nreportContent += `Усього файлів: ${totalFiles}\\n`;\nreportContent += `Усього папок: ${totalFolders + 1}\\n\\n`;\n\nreportContent += `Розподіл за типами:\\n`;\nfor (const [name, count] of Object.entries(typeStats)) {\n  reportContent += `- ${name}: ${count} шт.\\n`;\n}\n\nreportContent += `\\nЧас старту: ${startTime}\\n`;\nreportContent += `Час завершення: ${endTime}\\n`;\nreportContent += `URL оригіналу: ${sourceUrl}\\n`;\nreportContent += `URL копії: ${destUrl}\\n`;\n\nreturn {\n  json: { \n    reportContent: reportContent, \n    totalFiles: totalFiles, \n    totalFolders: totalFolders,\n    fileName: `copy_info_${surname}_${config.dateStr}.txt`,\n    destFolderId: destFolderId,\n    telegramMsg: `✅ Роботу завершено!\\n📂 Створено папок: ${totalFolders + 1}\\n📄 Скопійовано файлів: ${totalFiles}` \n  }\n};"
       },
       "id": "4c807455-efad-457a-8848-6b21d9d76588",
       "name": "Generate Report Data",
@@ -281,7 +281,7 @@
     {
       "parameters": {
         "chatId": "338939440",
-        "text": "={{ $json.telegramMsg }}",
+        "text": "={{ $('Generate Report Data').item.json.telegramMsg }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegram",
@@ -524,9 +524,9 @@
         "query": {},
         "body": {
           "sourceUrl": "https://drive.google.com/drive/u/0/folders/1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
-          "destinationName": "BUZAIEV_Tech_Spec_17-04-2026",
+          "destinationName": "BUZAIEV_Tech_Spec_18-04-2026",
           "lastName": "BUZAIEV",
-          "timestamp": "2026-04-17T21:05:14.810Z"
+          "timestamp": "2026-04-17T22:01:21.723Z"
         },
         "webhookUrl": "https://n8n-stage.niko-tech.eu/webhook/b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff",
         "executionMode": "production"
