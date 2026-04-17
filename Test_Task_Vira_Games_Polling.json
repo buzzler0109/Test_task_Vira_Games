@@ -40,7 +40,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Проверяем, нашел ли предыдущий узел данные (или выдал ошибку, потому что таблица удалена)\nconst data = $input.all();\n\nif (data[0].json && data[0].json.error) {\n  // Таблицы нет = значит основной воркфлоу всё закончил и удалил её!\n  return { json: { status: \"completed\", message: \"✅ Всі файли успішно скопійовані!\" } };\n} else {\n  // Таблица есть, считаем сколько там строчек (файлов)\n  const copiedCount = data.length;\n  return { json: { status: \"processing\", count: copiedCount, message: `⏳ Скопійовано файлів: ${copiedCount}...` } };\n}"
+        "jsCode": "\nconst data = $input.all();\n\nif (data[0].json && data[0].json.error) {\n\n  return { json: { status: \"completed\", message: \"✅ Всі файли успішно скопійовані!\" } };\n} else {\n\n  const copiedCount = data.length;\n  return { json: { status: \"processing\", count: copiedCount, message: `⏳ Скопійовано файлів: ${copiedCount}...` } };\n}"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
