@@ -1,0 +1,448 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Config').item.json.destName }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.parents[0] }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "b614bb44-7952-4cdd-94b8-1e758ae38ecd",
+      "name": "Create Dest Folder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1136,
+        272
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "V8uEDdu7AGahXa3C",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e7fa2077-252a-42fb-8eae-c86a69119781",
+              "name": "sourceId\t",
+              "value": "1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
+              "type": "string"
+            },
+            {
+              "id": "47523e79-316f-45b2-99d4-06429c0656b6",
+              "name": "destName",
+              "value": "=Buzaiev_Tech_Spec_{{ $now.format('dd-MM-yyyy') }}",
+              "type": "string"
+            },
+            {
+              "id": "b9d81cf6-555e-46fa-b764-0ed39e5d94c0",
+              "name": "dateStr",
+              "value": "={{ $now.format('dd-MM-yyyy') }}",
+              "type": "string"
+            },
+            {
+              "id": "f605f51d-29f4-4faa-b7d7-b4f78c4c5029",
+              "name": "startTime\t",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "eb7ae9ba-5b04-4db5-851f-d104afafc50a",
+              "name": "url\t",
+              "value": "https://drive.google.com/drive/folders/1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1568,
+        272
+      ],
+      "id": "72e529e2-f5b9-4385-9a21-34bd7171a9c7",
+      "name": "Config"
+    },
+    {
+      "parameters": {
+        "url": "=https://www.googleapis.com/drive/v3/files/{{ $json[\"sourceId\t\"] }}?fields=id,parents",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -1344,
+        272
+      ],
+      "id": "268ecb2f-d533-4080-873f-0422eb82ea6e",
+      "name": "Get Parent",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "V8uEDdu7AGahXa3C",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e7fa2077-252a-42fb-8eae-c86a69119781",
+              "name": "source_folder_id",
+              "value": "={{ $('Config').item.json[\"sourceId\t\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "47523e79-316f-45b2-99d4-06429c0656b6",
+              "name": "destName",
+              "value": "={{ $('Config').item.json.destName }}",
+              "type": "string"
+            },
+            {
+              "id": "b9d81cf6-555e-46fa-b764-0ed39e5d94c0",
+              "name": "dateStr",
+              "value": "={{ $('Config').item.json.dateStr }}",
+              "type": "string"
+            },
+            {
+              "id": "eb7ae9ba-5b04-4db5-851f-d104afafc50a",
+              "name": "url\t",
+              "value": "={{ $('Config').item.json[\"url\t\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "d299d081-0a60-4d0a-ae05-6094e4de415d",
+              "name": "=parentId",
+              "value": "={{ $('Get Parent').item.json.parents[0] }}",
+              "type": "string"
+            },
+            {
+              "id": "82ce33b6-7055-4856-9ec4-efabf19ee0de",
+              "name": "startTime",
+              "value": "={{ $('Config').item.json[\"startTime\t\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "3ed21fc4-0dd7-4d73-93c1-b3d0d16234ed",
+              "name": "dest_folder_id",
+              "value": "={{ $('Create Dest Folder').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "f4d5fcef-1594-4f7f-bc51-bf85c1f9935c",
+              "name": "table_name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -656,
+        272
+      ],
+      "id": "1947022a-e5d8-466c-a06c-6de2df7622cd",
+      "name": "Prepare Data"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "uCZWe7DBiRLBvhS7",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/uCZWe7DBiRLBvhS7",
+          "cachedResultName": "Execute Recursion"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -448,
+        272
+      ],
+      "id": "dd02e4cc-5a8d-4fe4-99ea-b525e2481961",
+      "name": "Call 'Execute Recursion'"
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all();\nconst config = $('Config').first().json;\nconst destFolderId = $('Create Dest Folder').first().json.id;\n\nlet totalFiles = 0;\nlet totalFolders = 0;\nconst typeStats = {};\n\n// Считаем файлы и группируем их по типам\nrows.forEach(row => {\n  const mimeType = row.json.MimeType || row.json.mimeType || 'unknown';\n  \n  if (mimeType === 'application/vnd.google-apps.folder') {\n    totalFolders++;\n  } else {\n    totalFiles++;\n    let type = 'інше';\n    if (mimeType.startsWith('image/')) type = 'зображення';\n    else if (mimeType.startsWith('video/')) type = 'відео';\n    else if (mimeType.includes('pdf')) type = 'pdf';\n    else if (mimeType.includes('document')) type = 'документи';\n\n    typeStats[type] = (typeStats[type] || 0) + 1;\n  }\n});\n\n// === ИСПРАВЛЕННЫЙ БЛОК ВРЕМЕНИ ===\nconst rawStartTime = config[\"startTime\\t\"] || config.startTime;\nconst startTime = rawStartTime ? new Date(rawStartTime).toLocaleString('uk-UA') : \"Невідомо\";\nconst endTime = new Date().toLocaleString('uk-UA');\n\nconst sourceUrl = config[\"url\\t\"] || config.url || \"Невідомо\";\nconst destUrl = `https://drive.google.com/drive/folders/${destFolderId}`;\n\n// Формируем текст\nlet reportContent = `Copy Info: ${config.destName}\\n`;\nreportContent += `=======================================\\n`;\nreportContent += `Усього файлів: ${totalFiles}\\n`;\nreportContent += `Усього папок: ${totalFolders + 1}\\n\\n`;\n\nreportContent += `Розподіл за типами:\\n`;\nfor (const [name, count] of Object.entries(typeStats)) {\n  reportContent += `- ${name}: ${count} шт.\\n`;\n}\n\nreportContent += `\\nЧас старту: ${startTime}\\n`;\nreportContent += `Час завершення: ${endTime}\\n`;\nreportContent += `URL оригіналу: ${sourceUrl}\\n`;\nreportContent += `URL копії: ${destUrl}\\n`;\n\nreturn {\n  json: { \n    reportContent: reportContent, \n    totalFiles: totalFiles, \n    totalFolders: totalFolders,\n    fileName: `copy_info_Buzaiev_${config.dateStr}.txt`,\n    destFolderId: destFolderId,\n    telegramMsg: `✅ Роботу завершено!\\n📂 Створено папок: ${totalFolders + 1}\\n📄 Скопійовано файлів: ${totalFiles}` \n  }\n};"
+      },
+      "id": "4c807455-efad-457a-8848-6b21d9d76588",
+      "name": "Generate Report Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "operation": "create",
+        "tableName": "=copy_stats",
+        "columns": {
+          "column": [
+            {
+              "name": "FileName"
+            },
+            {
+              "name": "MimeType"
+            }
+          ]
+        },
+        "options": {
+          "createIfNotExists": true
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -880,
+        272
+      ],
+      "id": "dcbe555b-aad5-4c76-a122-3148959059dd",
+      "name": "Create a data table"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "nd96T1sWjvOdMfYq",
+          "mode": "list",
+          "cachedResultName": "copy_stats",
+          "cachedResultUrl": "/projects/Lu6V0dBtLX41B53o/datatables/nd96T1sWjvOdMfYq"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -208,
+        272
+      ],
+      "id": "425c8728-b3c8-4480-bc45-6959b02f3039",
+      "name": "Get row(s)",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "table",
+        "operation": "delete",
+        "dataTableId": {
+          "__rl": true,
+          "value": "=copy_stats",
+          "mode": "name"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        448,
+        272
+      ],
+      "id": "b7d85609-1e20-4e5a-95c6-8182165271e2",
+      "name": "Delete a data table"
+    },
+    {
+      "parameters": {
+        "chatId": "338939440",
+        "text": "={{ $json.telegramMsg }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        272
+      ],
+      "id": "e5581479-fd2a-4c42-8956-e40f2083811e",
+      "name": "Send a text message",
+      "webhookId": "a561de4d-3deb-462b-89ff-8736f950bcab",
+      "credentials": {
+        "telegramApi": {
+          "id": "YT18dIsdZlvYA61r",
+          "name": "personal"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1808,
+        272
+      ],
+      "id": "a0546fb7-76ae-4d8b-9169-fa2f23932910",
+      "name": "Webhook",
+      "webhookId": "b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff"
+    }
+  ],
+  "connections": {
+    "Create Dest Folder": {
+      "main": [
+        [
+          {
+            "node": "Create a data table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config": {
+      "main": [
+        [
+          {
+            "node": "Get Parent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Parent": {
+      "main": [
+        [
+          {
+            "node": "Create Dest Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Data": {
+      "main": [
+        [
+          {
+            "node": "Call 'Execute Recursion'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Execute Recursion'": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Report Data": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a data table": {
+      "main": [
+        [
+          {
+            "node": "Prepare Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Generate Report Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Delete a data table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Config",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Config": [
+      {
+        "sourceId\t": "1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
+        "destName": "Buzaiev_Tech_Spec_17-04-2026",
+        "dateStr": "17-04-2026",
+        "startTime\t": "2026-04-17T10:27:48.991-04:00",
+        "url\t": "https://drive.google.com/drive/folders/1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e072f3b77f245933d117201776d487603bc055cdeabb3b73d84481d6b9cd8118"
+  }
+}

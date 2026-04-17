@@ -1,0 +1,721 @@
+{
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "99fe5f5d-1f1c-48d4-89cf-241f25da05be",
+      "name": "Execute Workflow Trigger",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -848,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "searchMethod": "query",
+        "queryString": "=",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "={{ $json.source_folder_id }}",
+            "mode": "id"
+          }
+        },
+        "options": {
+          "fields": [
+            "mimeType",
+            "id",
+            "name",
+            "webViewLink"
+          ]
+        }
+      },
+      "id": "b06f13f6-c063-4baa-a02b-a4f2fc0d6227",
+      "name": "Get Folder Contents",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -656,
+        288
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "V8uEDdu7AGahXa3C",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.mimeType }}",
+              "value2": "application/vnd.google-apps.folder"
+            }
+          ]
+        }
+      },
+      "id": "3bd53231-686a-4a22-9ff6-0fcd798f88f5",
+      "name": "Is Folder?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $json.name }}_duplicate",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Execute Workflow Trigger').item.json.dest_folder_id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "a3ff6b41-1b4d-47af-a3e6-ee9c4adc84cd",
+      "name": "Create Subfolder",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        96
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "V8uEDdu7AGahXa3C",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "493272fa-2006-40c4-9435-e803a017249c",
+              "name": "source_folder_id",
+              "value": "={{ $('Is Folder?').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "c1572564-a5b3-4910-a725-8faec1c9e7c0",
+              "name": "dest_folder_id",
+              "value": "={{ $('Create Subfolder').item.json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "fe0ac85d-f1cf-4efa-92ab-b44ce2353a2f",
+              "name": "table_name",
+              "value": "={{ $('Execute Workflow Trigger').item.json.table_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2d6ebafa-5e1d-415c-8810-64a93d67b1ae",
+      "name": "Prepare Recursion IDs",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const parts = $json.name.split('.');\nconst ext = parts.length > 1 ? '.' + parts.pop() : '';\nconst newName = parts.join('.') + '_duplicate' + ext;\n\nreturn {\n  json: {\n    oldId: $input.item.json.id,\n    mimeType: $input.item.json.mimeType,\n    newName: newName,\n    destId: $('Execute Workflow Trigger').item.json.dest_folder_id\n  }\n};"
+      },
+      "id": "2cb541f6-adaf-4cbf-b763-80cfdf1e9aa3",
+      "name": "Rename File Logic",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        96,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.mimeType }}",
+              "operation": "startsWith",
+              "value2": "image/"
+            }
+          ]
+        }
+      },
+      "id": "5de9c8fd-0954-4a0b-b238-964155f072e3",
+      "name": "Is Image?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        320,
+        448
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "text": "Technical Specifications",
+        "fontSize": "={{ Math.round($json.size.width * 0.05) }}",
+        "fontColor": "#F90909",
+        "positionX": "={{ $json.size.width / 2 - 200}}",
+        "positionY": "={{ $json.size.height / 2 }}",
+        "options": {}
+      },
+      "id": "0362997a-5543-4ee4-aa79-89fb45bcbeff",
+      "name": "Add Text Overlay",
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        896,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Download file').item.json.newName }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Download file').item.json.destId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "8d6aae6c-d028-4b66-9f78-26670df950f9",
+      "name": "Upload Modified Image",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1088,
+        320
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "V8uEDdu7AGahXa3C",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.oldId }}",
+          "mode": "id"
+        },
+        "name": "={{ $json.newName }}",
+        "sameFolder": false,
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $json.destId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "a9e5d100-ae7c-44ef-8167-4e7b73d6770e",
+      "name": "Copy Standard File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        544,
+        560
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "V8uEDdu7AGahXa3C",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.oldId }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        544,
+        320
+      ],
+      "id": "0c930f45-e658-4fcf-a362-fc43def389ab",
+      "name": "Download file",
+      "retryOnFail": true,
+      "waitBetweenTries": 2000,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "V8uEDdu7AGahXa3C",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "information"
+      },
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [
+        720,
+        320
+      ],
+      "id": "b8ea4c14-df30-4e8f-8129-fddf76d8d184",
+      "name": "Edit Image"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "uCZWe7DBiRLBvhS7",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/uCZWe7DBiRLBvhS7",
+          "cachedResultName": "Execute Recursion"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        464,
+        96
+      ],
+      "id": "477f8d60-4865-4054-9b0e-e24c871b21ac",
+      "name": "Call 'Execute Recursion'"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -176,
+        432
+      ],
+      "id": "7156d798-e9ff-43ee-9b4d-a584cd76e8f3",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "=copy_stats",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "MimeType": "={{ $json.mimeType }}",
+            "FileName": "={{ $('Download file').item.json.newName }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FileName",
+              "displayName": "FileName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "MimeType",
+              "displayName": "MimeType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1264,
+        320
+      ],
+      "id": "6a0bdcd1-8495-4d8a-8237-3c864d1a687b",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "=copy_stats",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "FileName": "={{ $json.name }}",
+            "MimeType": "={{ $json.mimeType }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FileName",
+              "displayName": "FileName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "MimeType",
+              "displayName": "MimeType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        48,
+        96
+      ],
+      "id": "22c16548-3f9c-4514-9492-9d3bf3294a11",
+      "name": "Insert row1"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "=copy_stats",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "MimeType": "={{ $json.mimeType }}",
+            "FileName": "={{ $json.name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "FileName",
+              "displayName": "FileName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "MimeType",
+              "displayName": "MimeType",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        736,
+        560
+      ],
+      "id": "4974bc62-2de2-49fd-ad77-4ac478bb1f4d",
+      "name": "Insert row2"
+    },
+    {
+      "parameters": {
+        "content": "## Settings\nChoose \"Execute Recursion\" from list"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -80
+      ],
+      "typeVersion": 1,
+      "id": "9f13de19-028d-4795-8222-70488c02293f",
+      "name": "Sticky Note"
+    }
+  ],
+  "connections": {
+    "Execute Workflow Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Folder Contents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Folder Contents": {
+      "main": [
+        [
+          {
+            "node": "Is Folder?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Folder?": {
+      "main": [
+        [
+          {
+            "node": "Create Subfolder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Subfolder": {
+      "main": [
+        [
+          {
+            "node": "Insert row1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Recursion IDs": {
+      "main": [
+        [
+          {
+            "node": "Call 'Execute Recursion'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename File Logic": {
+      "main": [
+        [
+          {
+            "node": "Is Image?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Image?": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Copy Standard File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Text Overlay": {
+      "main": [
+        [
+          {
+            "node": "Upload Modified Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Modified Image": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy Standard File": {
+      "main": [
+        [
+          {
+            "node": "Insert row2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Edit Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Image": {
+      "main": [
+        [
+          {
+            "node": "Add Text Overlay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Rename File Logic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row1": {
+      "main": [
+        [
+          {
+            "node": "Prepare Recursion IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Execute Workflow Trigger": [
+      {
+        "source_folder_id": "1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
+        "destName": "Buzaiev_Tech_Spec_17-04-2026",
+        "dateStr": "17-04-2026",
+        "url\t": "https://drive.google.com/drive/folders/1t3nIyZsSKYve8ku7S5VyYYD_YnA3OaW9",
+        "parentId": "0AL7F7kLAl9Q1Uk9PVA",
+        "startTime": "2026-04-17T10:27:48.991-04:00",
+        "dest_folder_id": "1Jv50lSakBfAmxhxL_n7Vosnzyqcurhty",
+        "table_name": "copy_stats_596"
+      }
+    ]
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e072f3b77f245933d117201776d487603bc055cdeabb3b73d84481d6b9cd8118"
+  }
+}
