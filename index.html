@@ -294,7 +294,7 @@
             consoleBox.classList.remove('items-center', 'justify-center');
             consoleBox.classList.add('items-start', 'justify-start');
             consoleBox.innerHTML = `<div class="w-full" id="logContainer">
-                <span class="text-n8n animate-pulse">> Establishing connection to Webhook...</span><br>
+                <span id="initLine" class="text-n8n animate-pulse">> Establishing connection to Webhook...</span><br>
                 <span class="text-zinc-600">> Endpoint: ${mainWebhookUrl}</span><br>
                 <span class="text-zinc-600">> Payload: { destName: "${destName}" }</span>
             </div>`;
@@ -332,6 +332,14 @@
                     try { data = JSON.parse(data); } catch(e) {} // Fallback for bad headers
                 }
 
+                // Stop pulsing
+                const initLine = document.getElementById('initLine');
+                if (initLine) {
+                    initLine.classList.remove('animate-pulse', 'text-n8n');
+                    initLine.classList.add('text-zinc-500');
+                    initLine.innerText = '> Connection established';
+                }
+
                 if(response.ok) {
                     // Check if it's the expected job format
                     if (data && data.status === 'started' && data.job_id) {
@@ -361,6 +369,9 @@
                     throw new Error(`HTTP Error ${response.status}: ${JSON.stringify(data)}`);
                 }
             } catch (error) {
+                const initLine = document.getElementById('initLine');
+                if (initLine) initLine.classList.remove('animate-pulse');
+                
                 appendLog(`CONNECTION FAILED: ${error.message}`, "text-red-400", "✗");
                 appendLog(`Hint: Check if your n8n instance allows CORS requests from github.io, or if the webhook is currently active.`, "text-zinc-600", "");
                 resetButton();
