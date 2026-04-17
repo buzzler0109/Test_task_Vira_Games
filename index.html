@@ -17,7 +17,9 @@
                     },
                     colors: {
                         primary: '#3b82f6',
-                        primaryHov: '#2563eb'
+                        primaryHov: '#2563eb',
+                        n8n: '#ea5252',
+                        n8nHov: '#ff6d5a'
                     }
                 }
             }
@@ -106,7 +108,7 @@
                 <p class="text-zinc-400 font-sans mt-2">Vira Games Technical Automation</p>
             </div>
             <div class="hidden sm:inline-flex items-center gap-2 text-xs font-mono bg-zinc-900 px-3 py-1.5 rounded-full border border-zinc-700 text-zinc-300 shadow-lg">
-                <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div> n8n Ready
+                <i class="fa-solid fa-circle-nodes text-n8n text-base"></i> n8n Automation
             </div>
         </header>
 
@@ -122,8 +124,9 @@
                     <div class="absolute -top-32 -right-32 w-64 h-64 bg-primary opacity-10 blur-3xl rounded-full pointer-events-none"></div>
 
                     <div>
-                        <div class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-xl mb-6 border border-primary/30">
-                            <i class="fa-solid fa-radar text-xl"></i>
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-n8n/20 text-n8n rounded-xl mb-6 border border-n8n/30">
+                            <!-- SVG n8n logo approximation -->
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M11 2v4.228A5.986 5.986 0 008.228 11H4V2h7zm1 0h7v9h-4.228A5.986 5.986 0 0013 6.228V2zM2 13h4.228A5.986 5.986 0 0011 17.772V22H2v-9zm10 9v-4.228A5.986 5.986 0 0015.772 13H20v9h-8z"/></svg>
                         </div>
                         <h2 class="font-display text-2xl font-bold mb-2 text-white">Execute Scan</h2>
                         <p class="text-zinc-400 text-sm mb-8">Initialize the dynamic workspace cloning workflow. Ensure the background n8n environment is active and waiting for payload.</p>
@@ -133,16 +136,24 @@
                         
                         <!-- Inputs -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Source Folder URL</label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">n8n Webhook URL <span class="text-n8n">*</span></label>
+                            <input type="url" id="webhookUrl" required
+                                class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-n8n focus:ring-1 focus:ring-n8n transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
+                                placeholder="https://your-n8n-instance.com/webhook/..."
+                                value="https://n8n-stage.niko-tech.eu/webhook/b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Source Folder URL <span class="text-n8n">*</span></label>
                             <input type="url" id="driveUrl" required
-                                class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
+                                class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-n8n focus:ring-1 focus:ring-n8n transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
                                 placeholder="https://drive.google.com/drive/folders/...">
                         </div>
                         
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Candidate's Last Name <span class="text-red-400">*</span></label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Candidate's Last Name <span class="text-n8n">*</span></label>
                             <input type="text" id="lastName" required
-                                class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
+                                class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-n8n focus:ring-1 focus:ring-n8n transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
                                 placeholder="e.g. Buzaiev">
                             <p class="text-xs text-zinc-500 mt-1">This will be used to generate the destination folder name: <span class="text-zinc-300 font-mono">[LastName]_Tech_Spec_DD-MM-YYYY</span></p>
                         </div>
@@ -156,8 +167,8 @@
                         </div>
 
                         <button type="submit" id="submitBtn" disabled
-                            class="w-full mt-2 bg-primary hover:bg-primaryHov text-white font-medium py-4 rounded-lg transition-all focus:ring-4 focus:ring-primary/20 flex justify-center items-center gap-2 opacity-50 cursor-not-allowed shadow-[0_0_15px_rgba(59,130,246,0)]">
-                            <i class="fa-solid fa-paper-plane text-sm"></i> Transmit Payload
+                            class="w-full mt-2 bg-n8n hover:bg-n8nHov text-white font-bold py-4 rounded-lg transition-all focus:ring-4 focus:ring-n8n/20 flex justify-center items-center gap-2 opacity-50 cursor-not-allowed shadow-[0_0_15px_rgba(234,82,82,0)]">
+                            Execute Workflow
                         </button>
                     </form>
                 </div>
@@ -252,11 +263,11 @@
             if(e.target.checked) {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                btn.classList.add('shadow-[0_0_20px_rgba(59,130,246,0.3)]');
+                btn.classList.add('shadow-[0_0_20px_rgba(234,82,82,0.3)]');
             } else {
                 btn.disabled = true;
                 btn.classList.add('opacity-50', 'cursor-not-allowed');
-                btn.classList.remove('shadow-[0_0_20px_rgba(59,130,246,0.3)]');
+                btn.classList.remove('shadow-[0_0_20px_rgba(234,82,82,0.3)]');
             }
         });
 
@@ -265,7 +276,8 @@
             e.preventDefault();
             
             const consoleBox = document.getElementById('resultConsole');
-            const url = document.getElementById('driveUrl').value;
+            const webhookUrl = document.getElementById('webhookUrl').value.trim();
+            const url = document.getElementById('driveUrl').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
             
             // Format destination name logic matching n8n expectations
@@ -273,16 +285,14 @@
             const destName = `${lastName || 'Unknown'}_Tech_Spec_${dateStr}`;
             
             // UI Loading
-            btn.innerHTML = '<div class="spinner"></div> Transmitting...';
+            btn.innerHTML = '<div class="spinner"></div> Instructing nodes...';
             btn.classList.add('opacity-80', 'cursor-wait');
             btn.disabled = true;
             
             // Re-render console to align top-left instead of center
             consoleBox.classList.remove('items-center', 'justify-center');
             consoleBox.classList.add('items-start', 'justify-start');
-            consoleBox.innerHTML = `<div class="w-full"><span class="text-primary animate-pulse">> Establishing connection to Webhook...</span><br><span class="text-zinc-600">> Payload: { destName: "${destName}" }</span></div>`;
-
-            const webhookUrl = 'https://n8n-stage.niko-tech.eu/webhook/b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff';
+            consoleBox.innerHTML = `<div class="w-full"><span class="text-n8n animate-pulse">> Establishing connection to Webhook...</span><br><span class="text-zinc-600">> Endpoint: ${webhookUrl}</span><br><span class="text-zinc-600">> Payload: { destName: "${destName}" }</span></div>`;
 
             try {
                 const response = await fetch(webhookUrl, {
@@ -339,7 +349,7 @@
 </div>`;
             } finally {
                 // Restore button
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane text-sm"></i> Transmit Payload';
+                btn.innerHTML = 'Execute Workflow';
                 btn.classList.remove('opacity-80', 'cursor-wait');
                 btn.disabled = false;
             }
