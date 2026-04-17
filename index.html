@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth dark">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vira Games Scanner Workspace</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -16,9 +16,6 @@
                         mono: ['Fira Code', 'monospace']
                     },
                     colors: {
-                        base: '#09090b',
-                        surface: '#18181b',
-                        bordercolor: '#27272a',
                         primary: '#3b82f6',
                         primaryHov: '#2563eb'
                     }
@@ -30,42 +27,43 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
+        /* Force dark theme defaults */
         body {
-            background-color: theme('colors.base');
-            color: #fafafa;
+            background-color: #09090b; /* zinc-950 */
+            color: #fafafa; /* zinc-50 */
         }
         
         .bento-card {
-            background-color: theme('colors.surface');
-            border: 1px solid theme('colors.bordercolor');
+            background-color: #18181b; /* zinc-900 */
+            border: 1px solid #27272a; /* zinc-800 */
             border-radius: 1.5rem;
-            transition: all 0.3s ease;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         
         .bento-card:hover {
-            border-color: #3f3f46;
+            border-color: #3f3f46; /* zinc-700 */
             box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
         }
 
         /* Checkbox Styling */
-        input[type="checkbox"] {
+        input[type="checkbox"].custom-cb {
             appearance: none;
             width: 1.25rem;
             height: 1.25rem;
-            border: 2px solid theme('colors.bordercolor');
+            border: 2px solid #3f3f46;
             border-radius: 0.35rem;
-            background-color: theme('colors.base');
+            background-color: #18181b;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
         }
-        input[type="checkbox"]:checked {
-            background-color: theme('colors.primary');
-            border-color: theme('colors.primary');
+        input[type="checkbox"].custom-cb:checked {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
         }
-        input[type="checkbox"]:checked::after {
+        input[type="checkbox"].custom-cb:checked::after {
             content: '✓';
             color: white;
             font-size: 0.8rem;
@@ -81,6 +79,20 @@
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #09090b; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #27272a; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46; 
+        }
     </style>
 </head>
 <body class="antialiased min-h-screen py-12 px-4 sm:px-8">
@@ -88,13 +100,13 @@
     <div class="max-w-6xl mx-auto space-y-8">
         
         <!-- Header -->
-        <header class="flex justify-between items-end pb-6 border-b border-bordercolor">
+        <header class="flex justify-between items-end pb-6 border-b border-zinc-800">
             <div>
-                <h1 class="font-display text-3xl font-bold tracking-tight">Scanner Workspace</h1>
+                <h1 class="font-display text-3xl font-bold tracking-tight text-white">Scanner Workspace</h1>
                 <p class="text-zinc-400 font-sans mt-2">Vira Games Technical Automation</p>
             </div>
-            <div class="hidden sm:inline-flex items-center gap-2 text-xs font-mono bg-surface px-3 py-1.5 rounded-full border border-bordercolor text-zinc-300">
-                <div class="w-2 h-2 rounded-full bg-green-500"></div> n8n Ready
+            <div class="hidden sm:inline-flex items-center gap-2 text-xs font-mono bg-zinc-900 px-3 py-1.5 rounded-full border border-zinc-700 text-zinc-300 shadow-lg">
+                <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div> n8n Ready
             </div>
         </header>
 
@@ -107,43 +119,44 @@
                 <!-- Form Card -->
                 <div class="bento-card p-8 flex-grow flex flex-col justify-between relative overflow-hidden">
                     <!-- Deco blur -->
-                    <div class="absolute -top-32 -right-32 w-64 h-64 bg-primary opacity-10 blur-3xl rounded-full"></div>
+                    <div class="absolute -top-32 -right-32 w-64 h-64 bg-primary opacity-10 blur-3xl rounded-full pointer-events-none"></div>
 
                     <div>
-                        <div class="inline-flex items-center justify-center w-12 h-12 bg-primary/10 text-primary rounded-xl mb-6">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-primary/20 text-primary rounded-xl mb-6 border border-primary/30">
                             <i class="fa-solid fa-radar text-xl"></i>
                         </div>
-                        <h2 class="font-display text-2xl font-bold mb-2">Execute Scan</h2>
+                        <h2 class="font-display text-2xl font-bold mb-2 text-white">Execute Scan</h2>
                         <p class="text-zinc-400 text-sm mb-8">Initialize the dynamic workspace cloning workflow. Ensure the background n8n environment is active and waiting for payload.</p>
                     </div>
 
-                    <form id="scanForm" class="space-y-5">
+                    <form id="scanForm" class="space-y-6">
                         
-                        <!-- Checkbox Confirmation -->
-                        <div class="flex items-start gap-3 bg-base p-4 rounded-xl border border-bordercolor mb-6 cursor-pointer" onclick="document.getElementById('n8nConfirm').click()">
-                            <input type="checkbox" id="n8nConfirm" class="mt-0.5">
-                            <label class="text-sm font-medium text-zinc-300 cursor-pointer pointer-events-none">
-                                I confirm that both <span class="text-white">Main Container</span> and <span class="text-white">Recursive</span> n8n workflows have been imported and activated in my workspace.
-                            </label>
-                        </div>
-
                         <!-- Inputs -->
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-500">Source Folder URL</label>
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Source Folder URL</label>
                             <input type="url" id="driveUrl" required
-                                class="w-full bg-base border border-bordercolor text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-primary transition-colors font-mono text-sm"
+                                class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
                                 placeholder="https://drive.google.com/drive/folders/...">
                         </div>
                         
                         <div class="space-y-2">
-                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-500">Destination Folder Name</label>
-                            <input type="text" id="destName" 
-                                class="w-full bg-base border border-bordercolor text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-primary transition-colors font-mono text-sm"
-                                placeholder="default: ViraGames_Tech_Spec">
+                            <label class="text-xs font-bold uppercase tracking-wider text-zinc-400">Candidate's Last Name <span class="text-red-400">*</span></label>
+                            <input type="text" id="lastName" required
+                                class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 rounded-lg py-3 px-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-mono text-sm shadow-inner placeholder-zinc-600"
+                                placeholder="e.g. Buzaiev">
+                            <p class="text-xs text-zinc-500 mt-1">This will be used to generate the destination folder name: <span class="text-zinc-300 font-mono">[LastName]_Tech_Spec_DD-MM-YYYY</span></p>
+                        </div>
+
+                        <!-- Checkbox Confirmation (Moved under form) -->
+                        <div class="flex items-start gap-3 bg-zinc-950/50 p-4 rounded-xl border border-zinc-800 mt-6 cursor-pointer hover:border-zinc-600 transition-colors" onclick="document.getElementById('n8nConfirm').click()">
+                            <input type="checkbox" id="n8nConfirm" class="custom-cb mt-0.5">
+                            <label class="text-sm font-medium text-zinc-400 cursor-pointer pointer-events-none leading-snug">
+                                I confirm that both <span class="text-zinc-200">Main Container</span> and <span class="text-zinc-200">Recursive</span> n8n workflows have been imported and activated in my workspace.
+                            </label>
                         </div>
 
                         <button type="submit" id="submitBtn" disabled
-                            class="w-full mt-4 bg-primary hover:bg-primaryHov text-white font-medium py-3.5 rounded-lg transition-all focus:ring-4 focus:ring-primary/20 flex justify-center items-center gap-2 opacity-50 cursor-not-allowed">
+                            class="w-full mt-2 bg-primary hover:bg-primaryHov text-white font-medium py-4 rounded-lg transition-all focus:ring-4 focus:ring-primary/20 flex justify-center items-center gap-2 opacity-50 cursor-not-allowed shadow-[0_0_15px_rgba(59,130,246,0)]">
                             <i class="fa-solid fa-paper-plane text-sm"></i> Transmit Payload
                         </button>
                     </form>
@@ -151,11 +164,11 @@
 
                 <!-- Result Terminal -->
                 <div class="bento-card p-6 min-h-[140px] flex flex-col">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-terminal"></i> Response Console
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-terminal text-zinc-500"></i> Response Console
                     </h3>
                     
-                    <div id="resultConsole" class="flex-grow bg-base border border-bordercolor rounded-lg p-4 font-mono text-xs overflow-x-auto text-zinc-500 flex items-center justify-center">
+                    <div id="resultConsole" class="flex-grow bg-zinc-950 border border-zinc-800 rounded-lg p-4 font-mono text-xs overflow-x-auto text-zinc-500 flex items-center justify-center shadow-inner">
                         Awaiting execution...
                     </div>
                 </div>
@@ -167,56 +180,61 @@
                 
                 <!-- Downloads -->
                 <div class="bento-card p-6">
-                    <h3 class="font-display font-semibold text-lg mb-4">Required Assets</h3>
+                    <h3 class="font-display font-semibold text-lg mb-4 text-white">Required Assets</h3>
                     <div class="space-y-3">
-                        <a href="Test_Task_Vira_Games_Copy_Directory.json" download class="flex items-center justify-between p-3 bg-base border border-bordercolor rounded-lg hover:border-primary transition-colors group cursor-pointer">
+                        <a href="Test_Task_Vira_Games_Copy_Directory.json" download class="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-primary/50 transition-colors group cursor-pointer shadow-sm">
                             <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-file-code text-zinc-500 group-hover:text-primary transition-colors"></i>
+                                <div class="w-8 h-8 rounded bg-primary/10 flex flex-col items-center justify-center relative border border-primary/20">
+                                    <i class="fa-solid fa-code text-primary text-xs"></i>
+                                </div>
                                 <div>
                                     <p class="text-sm font-medium text-zinc-200">Main_Workflow.json</p>
                                     <p class="text-xs text-zinc-500">Controller config</p>
                                 </div>
                             </div>
-                            <i class="fa-solid fa-download text-zinc-600 group-hover:text-primary"></i>
+                            <i class="fa-solid fa-download text-zinc-600 group-hover:text-primary transition-colors"></i>
                         </a>
                         
-                        <a href="Test_Task_Vira_Games_Execute_Recursion.json" download class="flex items-center justify-between p-3 bg-base border border-bordercolor rounded-lg hover:border-primary transition-colors group cursor-pointer">
+                        <a href="Test_Task_Vira_Games_Execute_Recursion.json" download class="flex items-center justify-between p-3 bg-zinc-950 border border-zinc-800 rounded-lg hover:border-purple-500/50 transition-colors group cursor-pointer shadow-sm">
                             <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-file-code text-zinc-500 group-hover:text-primary transition-colors"></i>
+                                <div class="w-8 h-8 rounded bg-purple-500/10 flex flex-col items-center justify-center relative border border-purple-500/20">
+                                    <i class="fa-solid fa-microchip text-purple-400 text-xs"></i>
+                                </div>
                                 <div>
                                     <p class="text-sm font-medium text-zinc-200">Sub_Workflow.json</p>
                                     <p class="text-xs text-zinc-500">Recursive Engine</p>
                                 </div>
                             </div>
-                            <i class="fa-solid fa-download text-zinc-600 group-hover:text-primary"></i>
+                            <i class="fa-solid fa-download text-zinc-600 group-hover:text-purple-400 transition-colors"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Documentation -->
                 <div class="bento-card p-6 flex-grow overflow-auto max-h-[600px] custom-scrollbar">
-                    <h3 class="font-display font-semibold text-lg mb-4 pb-4 border-b border-bordercolor">Architecture Overview</h3>
+                    <h3 class="font-display font-semibold text-lg mb-4 pb-4 border-b border-zinc-800 text-white">Architecture Overview</h3>
                     
                     <div class="prose prose-sm prose-invert max-w-none text-zinc-400">
-                        <p class="mb-4">
+                        <p class="mb-4 text-zinc-300">
                             Автоматизований процес для рекурсивного копіювання вмісту папок Google Drive зі збереженням ієрархії, динамічною обробкою зображень (watermark) та генерацією фінального звіту.
                         </p>
                         
-                        <h4 class="text-zinc-200 font-semibold mb-2">1. Ініціалізація</h4>
+                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">1. Ініціалізація</h4>
                         <p class="mb-4">Зчитування налаштувань. Створення <code>Data Table</code> в базі n8n для безпечного збору статистики без навантаження на API.</p>
                         
-                        <h4 class="text-zinc-200 font-semibold mb-2">2. Рекурсія (Sub-Workflow)</h4>
-                        <ul class="list-disc pl-4 mb-4 space-y-1">
-                            <li>Вузол <code>Loop</code> для послідовної обробки (захист від OOM).</li>
-                            <li><strong>Папки:</strong> Викликає сам себе (рекурсія).</li>
-                            <li><strong>Зображення:</strong> <code>Edit Image</code> (динамічні формули) → запис у БД.</li>
+                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">2. Рекурсія (Sub-Workflow)</h4>
+                        <ul class="list-disc pl-4 mb-4 space-y-2 text-zinc-400 marker:text-primary">
+                            <li>Вузол <code class="bg-zinc-800 text-zinc-300 px-1 py-0.5 rounded">Loop</code> для послідовної обробки (захист від OOM).</li>
+                            <li><strong class="text-white">Папки:</strong> Викликає сам себе (рекурсія).</li>
+                            <li><strong class="text-white">Зображення:</strong> <code class="bg-zinc-800 text-zinc-300 px-1 py-0.5 rounded">Edit Image</code> (динамічні формули) → запис у БД.</li>
                         </ul>
 
-                        <h4 class="text-zinc-200 font-semibold mb-2">3. Звітність</h4>
-                        <p class="mb-4">Агрегація вивантажених з БД даних. Створення логу <code>.txt</code> у створеній директорії та відправка нотифікації в Telegram.</p>
+                        <h4 class="text-zinc-200 font-semibold mb-2 mt-6">3. Звітність</h4>
+                        <p class="mb-4">Агрегація вивантажених з БД даних. Створення логу <code class="bg-zinc-800 text-zinc-300 px-1 py-0.5 rounded">.txt</code> у створеній директорії та відправка нотифікації в Telegram.</p>
 
-                        <div class="mt-6 p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-200/80">
-                            <strong>Масштабування:</strong> Для продакшену рекомендується додати вузол <code>Wait (1 сек)</code> у Loop підпроцесу та <code>Retry On Fail</code> для G-Drive вузлів.
+                        <div class="mt-8 p-4 rounded-xl bg-orange-500/10 border border-orange-500/20">
+                            <strong class="text-orange-400 block mb-1">⚠️ Масштабування для Продакшену:</strong> 
+                            <span class="text-orange-200/70 text-xs leading-relaxed">Рекомендується додати вузол Wait (1 сек) у Loop підпроцесу та Retry On Fail для G-Drive вузлів.</span>
                         </div>
                     </div>
                 </div>
@@ -234,26 +252,35 @@
             if(e.target.checked) {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.classList.add('shadow-[0_0_20px_rgba(59,130,246,0.3)]');
             } else {
                 btn.disabled = true;
                 btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.classList.remove('shadow-[0_0_20px_rgba(59,130,246,0.3)]');
             }
         });
 
-        // Form Submission Logic
+        // Form logic
         document.getElementById('scanForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const consoleBox = document.getElementById('resultConsole');
             const url = document.getElementById('driveUrl').value;
-            const dest = document.getElementById('destName').value || 'ViraGames_Tech_Spec';
+            const lastName = document.getElementById('lastName').value.trim();
             
-            // UI Loading state
+            // Format destination name logic matching n8n expectations
+            const dateStr = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+            const destName = `${lastName || 'Unknown'}_Tech_Spec_${dateStr}`;
+            
+            // UI Loading
             btn.innerHTML = '<div class="spinner"></div> Transmitting...';
             btn.classList.add('opacity-80', 'cursor-wait');
             btn.disabled = true;
             
-            consoleBox.innerHTML = `<span class="text-primary animate-pulse">Establishing connection to Webhook...</span>`;
+            // Re-render console to align top-left instead of center
+            consoleBox.classList.remove('items-center', 'justify-center');
+            consoleBox.classList.add('items-start', 'justify-start');
+            consoleBox.innerHTML = `<div class="w-full"><span class="text-primary animate-pulse">> Establishing connection to Webhook...</span><br><span class="text-zinc-600">> Payload: { destName: "${destName}" }</span></div>`;
 
             const webhookUrl = 'https://n8n-stage.niko-tech.eu/webhook/b13ffc82-fdcc-4a6c-87b4-97c1b4bd3aff';
 
@@ -263,12 +290,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         sourceUrl: url,
-                        destinationName: dest,
+                        destinationName: destName,  // <--- Passed explicitly as generated
+                        lastName: lastName,         // <--- Also passed separately just in case your config node needs it
                         timestamp: new Date().toISOString()
                     })
                 });
 
-                // Attempt to parse JSON response or get text
                 let data;
                 const contentType = response.headers.get("content-type");
                 if (contentType && contentType.indexOf("application/json") !== -1) {
@@ -277,20 +304,29 @@
                     data = await response.text();
                 }
 
+                const timestamp = new Date().toLocaleTimeString();
+
                 if(response.ok) {
-                    // Success render
                     const formattedJson = typeof data === 'object' ? JSON.stringify(data, null, 2) : data;
-                    consoleBox.className = "flex-grow bg-base border border-bordercolor rounded-lg p-4 font-mono text-xs overflow-x-auto text-green-400";
-                    consoleBox.innerHTML = `<div><span class="text-zinc-500"># HTTP 200 OK</span><br><pre class="mt-2">${formattedJson || 'Workflow executed successfully.'}</pre></div>`;
+                    consoleBox.className = "flex-grow bg-zinc-950 border border-zinc-800 rounded-lg p-4 font-mono text-xs overflow-x-auto flex items-start justify-start shadow-inner";
+                    consoleBox.innerHTML = `<div class="w-full text-zinc-300">
+<span class="text-zinc-500"># [${timestamp}] HTTP 200 OK</span>
+<span class="text-green-400 block mt-1">✓ Workflow triggered successfully</span>
+<pre class="mt-3 text-zinc-400 whitespace-pre-wrap">${formattedJson || '{}'}</pre>
+</div>`;
                 } else {
                     throw new Error(`HTTP Error ${response.status}: ${JSON.stringify(data)}`);
                 }
             } catch (error) {
-                // Error render
-                consoleBox.className = "flex-grow bg-base border border-bordercolor rounded-lg p-4 font-mono text-xs overflow-x-auto text-red-400";
-                consoleBox.innerHTML = `<div><span class="text-zinc-500"># ERROR CAUGHT</span><br><pre class="mt-2 text-wrap">${error.message}</pre></div>`;
+                const timestamp = new Date().toLocaleTimeString();
+                consoleBox.className = "flex-grow bg-zinc-950 border border-zinc-800 rounded-lg p-4 font-mono text-xs overflow-x-auto flex items-start justify-start shadow-inner";
+                consoleBox.innerHTML = `<div class="w-full text-zinc-300">
+<span class="text-zinc-500"># [${timestamp}] CONNECTION FAILED</span>
+<span class="text-red-400 block mt-1">✗ ${error.message}</span>
+<div class="mt-3 text-zinc-500 border-l border-zinc-800 pl-3">Hint: Check if your n8n instance allows CORS requests from github.io, or if the webhook is currently active.</div>
+</div>`;
             } finally {
-                // Restore button state
+                // Restore button
                 btn.innerHTML = '<i class="fa-solid fa-paper-plane text-sm"></i> Transmit Payload';
                 btn.classList.remove('opacity-80', 'cursor-wait');
                 btn.disabled = false;
